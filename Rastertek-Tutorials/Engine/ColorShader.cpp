@@ -39,12 +39,12 @@ void ColorShader::Shutdown()
 	ColorShader::ShutdownShader();
 }
 
-bool ColorShader::Render(ID3D11DeviceContext* deviceContext, int indexCount, D3DXMATRIX worldMatrix, D3DXMATRIX viewMatrix, D3DXMATRIX projecitonMatrix)
+bool ColorShader::Render(ID3D11DeviceContext* deviceContext, int indexCount, D3DXMATRIX worldMatrix, D3DXMATRIX viewMatrix, D3DXMATRIX projectionMatrix)
 {
 	bool result;
 
 	//Set the shader parameters that it will use for rendering
-	result = ColorShader::SetShaderParameters(deviceContext, worldMatrix, viewMatrix, projecitonMatrix);
+	result = ColorShader::SetShaderParameters(deviceContext, worldMatrix, viewMatrix, projectionMatrix);
 	if (!result)
 	{
 		return false;
