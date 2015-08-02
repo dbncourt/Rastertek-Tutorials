@@ -137,7 +137,7 @@ void System::Run()
 		else
 		{
 			//Otherwise, do the frame processing
-			result = Frame();
+			result = System::Frame();
 			if (!result)
 			{
 				MessageBox(this->m_hwnd, L"Frame Processing Failed", L"Error", MB_OK);
