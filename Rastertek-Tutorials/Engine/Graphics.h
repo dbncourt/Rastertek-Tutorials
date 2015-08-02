@@ -9,6 +9,11 @@
 //////////////
 #include <windows.h>
 
+///////////////////////
+// MY CLASS INCLUDES //
+///////////////////////
+#include "Direct3D.h"
+
 /////////////
 // GLOBALS //
 /////////////
@@ -23,6 +28,9 @@ const float SCREEN_NEAR = 0.1f;
 ////////////////////////////////////////////////////////////////////////////////
 class Graphics
 {
+private:
+	Direct3D* m_Direct3D;
+
 public:
 	Graphics();
 	Graphics(const Graphics& other);
