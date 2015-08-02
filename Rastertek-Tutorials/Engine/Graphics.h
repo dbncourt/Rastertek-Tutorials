@@ -15,7 +15,8 @@
 #include "Direct3D.h"
 #include "Camera.h"
 #include "Model.h"
-#include "TextureShader.h"
+#include "LightShader.h"
+#include "Light.h"
 
 /////////////
 // GLOBALS //
@@ -35,7 +36,8 @@ private:
 	Direct3D* m_Direct3D;
 	Camera* m_Camera;
 	Model* m_Model;
-	TextureShader* m_TextureShader;
+	Light* m_Light;
+	LightShader* m_LightShader;
 
 public:
 	Graphics();
@@ -47,6 +49,6 @@ public:
 	bool Frame();
 
 private:
-	bool Render();
+	bool Render(float rotation);
 };
 #endif
