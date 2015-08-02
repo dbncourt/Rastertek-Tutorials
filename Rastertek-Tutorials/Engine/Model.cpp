@@ -171,14 +171,6 @@ bool Model::InitializeBuffers(ID3D11Device* device)
 
 void Model::ShutdownBuffers()
 {
-	//Release the Texture object
-	if (this->m_Texture)
-	{
-		this->m_Texture->Shutdown();
-		delete this->m_Texture;
-		this->m_Texture = nullptr;
-	}
-
 	//Release the Index Buffer
 	if (this->m_indexBuffer)
 	{
