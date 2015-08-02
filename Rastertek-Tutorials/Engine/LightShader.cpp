@@ -41,12 +41,12 @@ void LightShader::Shutdown()
 	LightShader::ShutdownShader();
 }
 
-bool LightShader::Render(ID3D11DeviceContext* deviceContext, int indexCount, D3DXMATRIX worldMatrix, D3DXMATRIX viewMatrix, D3DXMATRIX projecitonMatrix, ID3D11ShaderResourceView* texture, D3DXVECTOR3 lightDirection, D3DXCOLOR diffuseColor)
+bool LightShader::Render(ID3D11DeviceContext* deviceContext, int indexCount, D3DXMATRIX worldMatrix, D3DXMATRIX viewMatrix, D3DXMATRIX projectionMatrix, ID3D11ShaderResourceView* texture, D3DXVECTOR3 lightDirection, D3DXCOLOR diffuseColor)
 {
 	bool result;
 
 	//Set the shader parameters that it will use for rendering
-	result = LightShader::SetShaderParameters(deviceContext, worldMatrix, viewMatrix, projecitonMatrix, texture, lightDirection, diffuseColor);
+	result = LightShader::SetShaderParameters(deviceContext, worldMatrix, viewMatrix, projectionMatrix, texture, lightDirection, diffuseColor);
 	if (!result)
 	{
 		return false;
