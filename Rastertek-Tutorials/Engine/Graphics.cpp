@@ -23,15 +23,12 @@ bool Graphics::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 
 void Graphics::Shutdown()
 {
-	return;
 }
 
 bool Graphics::Frame()
 {
-	return true;
 }
 
 bool Graphics::Render()
 {
-	return true;
 }

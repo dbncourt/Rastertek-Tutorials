@@ -67,8 +67,6 @@ void System::Shutdown()
 
 	// Shutdown the window.
 	ShutdownWindows();
-
-	return;
 }
 
 void System::Run()
@@ -104,7 +102,6 @@ void System::Run()
 			}
 		}
 	}
-	return;
 }
 
 bool System::Frame()
@@ -225,7 +222,6 @@ void System::InitializeWindows(int& screenWidth, int& screenHeight)
 
 	//Hide the mouse cursor
 	ShowCursor(false);
-	return;
 }
 
 void System::ShutdownWindows()
@@ -249,8 +245,6 @@ void System::ShutdownWindows()
 
 	//Release the pointer to this class
 	ApplicationHandle = nullptr;
-
-	return;
 }
 
 LRESULT CALLBACK WndProc(HWND hwnd, UINT umessage, WPARAM wParam, LPARAM lParam)
