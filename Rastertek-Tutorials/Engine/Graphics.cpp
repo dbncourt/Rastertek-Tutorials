@@ -93,20 +93,19 @@ void Graphics::Shutdown()
 	}
 }
 
-bool Graphics::Frame()
+bool Graphics::Frame(int fps, int cpu, float frameTime)
 {
 	bool result;
 
-	static float rotation = 0.0f;
-
-	//Update the rotation variable each frame
-	rotation += (float)D3DX_PI * 0.005f;
-	if (rotation > 360.0f)
+	//Set the frame per second.
+	result = this->m_Text->SetFps(fps, this->m_Direct3D->GetDeviceContext());
+	if (!result)
 	{
-		rotation = -360.0f;
+		return false;
 	}
-	//Render the graphics scene
-	result = Graphics::Render(rotation);
+
+	//Set the cpu usage.
+	result = this->m_Text->SetCpu(cpu, this->m_Direct3D->GetDeviceContext());
 	if (!result)
 	{
 		return false;
@@ -115,7 +114,7 @@ bool Graphics::Frame()
 	return true;
 }
 
-bool Graphics::Render(float rotation)
+bool Graphics::Render()
 {
 	bool result;
 	D3DXMATRIX viewMatrix;
@@ -153,9 +152,6 @@ bool Graphics::Render(float rotation)
 
 	//Turn the Z-Buffer back on now that all 2D rendering has completed
 	this->m_Direct3D->TurnZBufferOn();
-
-	//Rotate the world matrix by the rotation value so that the triangle will spin
-	D3DXMatrixRotationY(&worldMatrix, rotation);
 
 	//Present the rendered scene to the screen
 	this->m_Direct3D->EndScene();

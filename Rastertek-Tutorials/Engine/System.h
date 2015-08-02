@@ -16,7 +16,9 @@
 ///////////////////////
 #include "Input.h"
 #include "Graphics.h"
-
+#include "Fps.h"
+#include "Cpu.h"
+#include "Timer.h"
 
 ////////////////////////////////////////////////////////////////////////////////
 // Class name: System
@@ -31,6 +33,9 @@ private:
 
 	Input* m_Input;
 	Graphics* m_Graphics;
+	Fps* m_Fps;
+	Cpu* m_Cpu;
+	Timer* m_Timer;
 
 public:
 	System();

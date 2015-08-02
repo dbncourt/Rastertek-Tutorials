@@ -51,6 +51,9 @@ public:
 	void Shutdown();
 	bool Render(ID3D11DeviceContext* deviceContext, D3DXMATRIX worldMatrix, D3DXMATRIX orthoMatrix);
 
+	bool SetFps(int fps, ID3D11DeviceContext* deviceContext);
+	bool SetCpu(int cpu, ID3D11DeviceContext* deviceContext);
+
 private:
 	bool InitializeSentence(SentenceType** sentence, int indexCount, ID3D11Device* device);
 	bool UpdateSentence(SentenceType* sentence, char* text, D3DXVECTOR2 position, D3DXCOLOR color, ID3D11DeviceContext* deviceContext);
