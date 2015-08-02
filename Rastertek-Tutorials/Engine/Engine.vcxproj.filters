@@ -28,6 +28,9 @@
     <Filter Include="Resource Files\Shader\Pixel">
       <UniqueIdentifier>{9534fc2b-71b5-454d-9b30-d677315a9b86}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Resource Files\Sound">
+      <UniqueIdentifier>{dd5a6069-1344-453b-aeb0-64fb98ec87e2}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Graphics.h">
