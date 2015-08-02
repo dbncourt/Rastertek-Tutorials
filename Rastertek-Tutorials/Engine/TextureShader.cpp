@@ -40,12 +40,12 @@ void TextureShader::Shutdown()
 	TextureShader::ShutdownShader();
 }
 
-bool TextureShader::Render(ID3D11DeviceContext* deviceContext, int indexCount, D3DXMATRIX worldMatrix, D3DXMATRIX viewMatrix, D3DXMATRIX projecitonMatrix, ID3D11ShaderResourceView* texture)
+bool TextureShader::Render(ID3D11DeviceContext* deviceContext, int indexCount, D3DXMATRIX worldMatrix, D3DXMATRIX viewMatrix, D3DXMATRIX projectionMatrix, ID3D11ShaderResourceView* texture)
 {
 	bool result;
 
 	//Set the shader parameters that it will use for rendering
-	result = TextureShader::SetShaderParameters(deviceContext, worldMatrix, viewMatrix, projecitonMatrix, texture);
+	result = TextureShader::SetShaderParameters(deviceContext, worldMatrix, viewMatrix, projectionMatrix, texture);
 	if (!result)
 	{
 		return false;
