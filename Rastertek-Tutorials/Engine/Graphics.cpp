@@ -9,7 +9,7 @@ Graphics::Graphics()
 	this->m_Direct3D = nullptr;
 	this->m_Camera = nullptr;
 	this->m_Model = nullptr;
-	this->m_ColorShader = nullptr;
+	this->m_TextureShader = nullptr;
 }
 
 Graphics::Graphics(const Graphics& other)
@@ -22,6 +22,8 @@ Graphics::~Graphics()
 
 bool Graphics::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 {
+	bool result;
+
 	//Create the Direct3D object
 	this->m_Direct3D = new Direct3D();
 	if (!this->m_Direct3D)
@@ -30,7 +32,8 @@ bool Graphics::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 	}
 
 	//Initialize the Direct3D object
-	if (!this->m_Direct3D->Initialize(screenWidth, screenHeight, VSYNC_ENABLED, hwnd, FULL_SCREEN, SCREEN_DEPTH, SCREEN_NEAR))
+	result = this->m_Direct3D->Initialize(screenWidth, screenHeight, VSYNC_ENABLED, hwnd, FULL_SCREEN, SCREEN_DEPTH, SCREEN_NEAR);
+	if (!result)
 	{
 		MessageBox(hwnd, L"Could not initialize Direct3D", L"Error", MB_OK);
 		return false;
@@ -54,23 +57,25 @@ bool Graphics::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 	}
 
 	//Initialize the Model object
-	if (!this->m_Model->Initialize(this->m_Direct3D->GetDevice()))
+	result = this->m_Model->Initialize(this->m_Direct3D->GetDevice(), L"seafloor.dds");
+	if (!result)
 	{
 		MessageBox(hwnd, L"Could not initialize the Model object", L"Error", MB_OK);
 		return false;
 	}
 
-	//Create the ColorShader object
-	this->m_ColorShader = new ColorShader();
-	if (!this->m_ColorShader)
+	//Create the TextureShader object
+	this->m_TextureShader = new TextureShader();
+	if (!this->m_TextureShader)
 	{
 		return false;
 	}
 
-	//Initialize the ColorShader object
-	if (!this->m_ColorShader->Initialize(this->m_Direct3D->GetDevice(), hwnd))
+	//Initialize the TextureShader object
+	result = this->m_TextureShader->Initialize(this->m_Direct3D->GetDevice(), hwnd);
+	if (!result)
 	{
-		MessageBox(hwnd, L"Could not initialize the ColorShader object", L"Error", MB_OK);
+		MessageBox(hwnd, L"Could not initialize the TextureShader object", L"Error", MB_OK);
 		return false;
 	}
 
@@ -79,12 +84,12 @@ bool Graphics::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 
 void Graphics::Shutdown()
 {
-	//Release the ColorShader object
-	if (this->m_ColorShader)
+	//Release the TextureShader object
+	if (this->m_TextureShader)
 	{
-		this->m_ColorShader->Shutdown();
-		delete this->m_ColorShader;
-		this->m_ColorShader = nullptr;
+		this->m_TextureShader->Shutdown();
+		delete this->m_TextureShader;
+		this->m_TextureShader = nullptr;
 	}
 
 	//Release the Model object
@@ -127,6 +132,7 @@ bool Graphics::Frame()
 
 bool Graphics::Render()
 {
+	bool result;
 
 	D3DXMATRIX viewMatrix;
 	D3DXMATRIX projectionMatrix;
@@ -147,7 +153,8 @@ bool Graphics::Render()
 	this->m_Model->Render(this->m_Direct3D->GetDeviceContext());
 
 	// Render the model using the color shader
-	if (!this->m_ColorShader->Render(this->m_Direct3D->GetDeviceContext(), this->m_Model->GetIndexCount(), worldMatrix, viewMatrix, projectionMatrix))
+	result = this->m_TextureShader->Render(this->m_Direct3D->GetDeviceContext(), this->m_Model->GetIndexCount(), worldMatrix, viewMatrix, projectionMatrix, this->m_Model->GetTexture());
+	if (!result)
 	{
 		return false;
 	}

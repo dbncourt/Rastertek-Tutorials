@@ -1,8 +1,8 @@
 ////////////////////////////////////////////////////////////////////////////////
-// Filename: ColorShader.h
+// Filename: TextureShader.h
 ////////////////////////////////////////////////////////////////////////////////
-#ifndef _COLORSHADER_H_
-#define _COLORSHADER_H_
+#ifndef _TEXTURESHADER_H_
+#define _TEXTURESHADER_H_
 
 //////////////
 // INCLUDES //
@@ -14,9 +14,9 @@
 using namespace std;
 
 ////////////////////////////////////////////////////////////////////////////////
-// Class name: ColorShader
+// Class name: TextureShader
 ////////////////////////////////////////////////////////////////////////////////
-class ColorShader
+class TextureShader
 {
 
 private:
@@ -31,23 +31,24 @@ private:
 	ID3D11PixelShader* m_pixelShader;
 	ID3D11InputLayout* m_inputLayout;
 	ID3D11Buffer* m_matrixBuffer;
+	ID3D11SamplerState* m_samplerState;
 
 
 public:
-	ColorShader();
-	ColorShader(const ColorShader& other);
-	~ColorShader();
+	TextureShader();
+	TextureShader(const TextureShader& other);
+	~TextureShader();
 
 	bool Initialize(ID3D11Device* device, HWND hwnd);
 	void Shutdown();
-	bool Render(ID3D11DeviceContext* deviceContext, int indexCount, D3DXMATRIX worldMatrix, D3DXMATRIX viewMatrix, D3DXMATRIX projectionMatrix);
+	bool Render(ID3D11DeviceContext* deviceContext, int indexCount, D3DXMATRIX worldMatrix, D3DXMATRIX viewMatrix, D3DXMATRIX projectionMatrix, ID3D11ShaderResourceView* texture);
 
 private:
 	bool InitializeShader(ID3D11Device* device, HWND hwnd, WCHAR* vertexShaderFileName, WCHAR* pixelShaderFileName);
 	void ShutdownShader();
 	void OutputShaderErrorMessage(ID3D10Blob* errorMessage, HWND hwnd, WCHAR* shaderFileName);
 
-	bool SetShaderParameters(ID3D11DeviceContext* deviceContext, D3DXMATRIX worldMatrix, D3DXMATRIX viewMatrix, D3DXMATRIX projectionMatrix);
+	bool SetShaderParameters(ID3D11DeviceContext* deviceContext, D3DXMATRIX worldMatrix, D3DXMATRIX viewMatrix, D3DXMATRIX projectionMatrix, ID3D11ShaderResourceView* texture);
 	void RenderShader(ID3D11DeviceContext* deviceContext, int indexCount);
 };
 #endif

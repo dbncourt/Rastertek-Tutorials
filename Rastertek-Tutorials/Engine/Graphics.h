@@ -15,7 +15,7 @@
 #include "Direct3D.h"
 #include "Camera.h"
 #include "Model.h"
-#include "ColorShader.h"
+#include "TextureShader.h"
 
 /////////////
 // GLOBALS //
@@ -35,7 +35,7 @@ private:
 	Direct3D* m_Direct3D;
 	Camera* m_Camera;
 	Model* m_Model;
-	ColorShader* m_ColorShader;
+	TextureShader* m_TextureShader;
 
 public:
 	Graphics();

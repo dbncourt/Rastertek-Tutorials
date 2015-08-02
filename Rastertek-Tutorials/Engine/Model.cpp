@@ -8,6 +8,7 @@ Model::Model()
 {
 	this->m_vertexBuffer = nullptr;
 	this->m_indexBuffer = nullptr;
+	this->m_Texture = nullptr;
 }
 
 Model::Model(const Model& other)
@@ -18,7 +19,7 @@ Model::~Model()
 {
 }
 
-bool Model::Initialize(ID3D11Device* device)
+bool Model::Initialize(ID3D11Device* device, WCHAR* textureFileName)
 {
 	bool result;
 
@@ -28,13 +29,29 @@ bool Model::Initialize(ID3D11Device* device)
 	{
 		return false;
 	}
+
+	//Load the texture for this model
+	result = Model::LoadTexture(device, textureFileName);
+	if (!result)
+	{
+		return false;
+	}
+
 	return true;
 }
 
 void Model::Shutdown()
 {
+	//Release the model texture
+	Model::ReleaseTexture();
+
 	// Shutdown the vertex and index buffers
 	Model::ShutdownBuffers();
+}
+
+ID3D11ShaderResourceView* Model::GetTexture()
+{
+	return this->m_Texture->GetTexture();
 }
 
 void Model::Render(ID3D11DeviceContext* deviceContext)
@@ -74,18 +91,18 @@ bool Model::InitializeBuffers(ID3D11Device* device)
 
 	//Load the vertex array with data
 	vertices[0].position = D3DXVECTOR3(-1.0f, -1.0f, 0.0f); //Bottom left
-	vertices[0].color = D3DXVECTOR4(0.0f, 1.0f, 0.0f, 1.0f);
+	vertices[0].texture = D3DXVECTOR2(0.0f, 1.0f);
 
 	vertices[1].position = D3DXVECTOR3(0.0f, 1.0f, 0.0f); //Top middle
-	vertices[1].color = D3DXVECTOR4(0.0f, 1.0f, 0.0f, 1.0f);
+	vertices[1].texture = D3DXVECTOR2(0.5f, 0.0f);
 
 	vertices[2].position = D3DXVECTOR3(1.0f, -1.0f, 0.0f); //Bottom right
-	vertices[2].color = D3DXVECTOR4(0.0f, 1.0f, 0.0f, 1.0f);
+	vertices[2].texture = D3DXVECTOR2(1.0f, 1.0f);
 
 	//Load the index array with data
-	indices[0] = 0;	//Bottom left
-	indices[1] = 1; //Top right
-	indices[2] = 2; //Bottom right
+	indices[0] = 0;  // Bottom left.
+	indices[1] = 1;  // Top middle.
+	indices[2] = 2;  // Bottom right.
 
 	D3D11_BUFFER_DESC vertexBufferDesc;
 	ZeroMemory(&vertexBufferDesc, sizeof(D3D11_BUFFER_DESC));
@@ -181,3 +198,36 @@ void Model::RenderBuffers(ID3D11DeviceContext* deviceContext)
 	//Set the type of primitive that should be rendered from this vertex buffer, in this case triangles.
 	deviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 }
+
+bool Model::LoadTexture(ID3D11Device* device, WCHAR* textureFileName)
+{
+	bool result;
+
+	//Create the texture object
+	this->m_Texture = new Texture();
+	if (!this->m_Texture)
+	{
+		return false;
+	}
+
+	//Initialize the texture object
+	result = this->m_Texture->Initialize(device, textureFileName);
+	if (!result)
+	{
+		return false;
+	}
+
+	return true;
+}
+
+void Model::ReleaseTexture()
+{
+	//Release the texture object
+	if (!this->m_Texture)
+	{
+		this->m_Texture->Shutdown();
+		delete this->m_Texture;
+		this->m_Texture = nullptr;
+	}
+}
+
