@@ -34,3 +34,13 @@ D3DXVECTOR3 Light::GetLightDirection()
 {
 	return this->m_lightDirection;
 }
+
+void Light::SetAmbientColor(D3DXCOLOR ambientColor)
+{
+	this->m_ambientColor = ambientColor;
+}
+
+D3DXCOLOR Light::GetAmbientColor()
+{
+	return this->m_ambientColor;
+}

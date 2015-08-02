@@ -41,12 +41,12 @@ void LightShader::Shutdown()
 	LightShader::ShutdownShader();
 }
 
-bool LightShader::Render(ID3D11DeviceContext* deviceContext, int indexCount, D3DXMATRIX worldMatrix, D3DXMATRIX viewMatrix, D3DXMATRIX projecitonMatrix, ID3D11ShaderResourceView* texture, D3DXVECTOR3 lightDirection, D3DXCOLOR diffuseColor)
+bool LightShader::Render(ID3D11DeviceContext* deviceContext, int indexCount, D3DXMATRIX worldMatrix, D3DXMATRIX viewMatrix, D3DXMATRIX projectionMatrix, ID3D11ShaderResourceView* texture, D3DXVECTOR3 lightDirection, D3DXCOLOR ambientColor, D3DXCOLOR diffuseColor)
 {
 	bool result;
 
 	//Set the shader parameters that it will use for rendering
-	result = LightShader::SetShaderParameters(deviceContext, worldMatrix, viewMatrix, projecitonMatrix, texture, lightDirection, diffuseColor);
+	result = LightShader::SetShaderParameters(deviceContext, worldMatrix, viewMatrix, projectionMatrix, texture, lightDirection, ambientColor, diffuseColor);
 	if (!result)
 	{
 		return false;
@@ -299,7 +299,7 @@ void LightShader::OutputShaderErrorMessage(ID3D10Blob* errorMessage, HWND hwnd, 
 	MessageBox(hwnd, L"Error compiling shader.  Check shader-error.txt for message.", shaderFileName, MB_OK);
 }
 
-bool LightShader::SetShaderParameters(ID3D11DeviceContext* deviceContext, D3DXMATRIX worldMatrix, D3DXMATRIX viewMatrix, D3DXMATRIX projectionMatrix, ID3D11ShaderResourceView* texture, D3DXVECTOR3 lightDirection, D3DXCOLOR diffuseColor)
+bool LightShader::SetShaderParameters(ID3D11DeviceContext* deviceContext, D3DXMATRIX worldMatrix, D3DXMATRIX viewMatrix, D3DXMATRIX projectionMatrix, ID3D11ShaderResourceView* texture, D3DXVECTOR3 lightDirection, D3DXCOLOR ambientColor, D3DXCOLOR diffuseColor)
 {
 	HRESULT result;
 
@@ -344,6 +344,7 @@ bool LightShader::SetShaderParameters(ID3D11DeviceContext* deviceContext, D3DXMA
 	//Copy the matrices into the constant buffer
 	lightDataPtr->diffuseColor = diffuseColor;
 	lightDataPtr->lightDirection = lightDirection;
+	lightDataPtr->ambientLight = ambientColor;
 
 	//Unlock the constant buffer
 	deviceContext->Unmap(this->m_lightBuffer, 0);

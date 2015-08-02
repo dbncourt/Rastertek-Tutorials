@@ -17,6 +17,7 @@ class Light
 private:
 	D3DXCOLOR m_diffuseColor;
 	D3DXVECTOR3 m_lightDirection;
+	D3DXCOLOR m_ambientColor;
 
 public:
 	Light();
@@ -24,9 +25,12 @@ public:
 	~Light();
 
 	void SetDiffuseColor(D3DXCOLOR diffuseColor);
-	void SetLightDirection(D3DXVECTOR3 lightDirection);
-
 	D3DXCOLOR GetDiffuseColor();
+
+	void SetLightDirection(D3DXVECTOR3 lightDirection);
 	D3DXVECTOR3 GetLightDirection();
+
+	void SetAmbientColor(D3DXCOLOR ambientColor);
+	D3DXCOLOR GetAmbientColor();
 };
 #endif
