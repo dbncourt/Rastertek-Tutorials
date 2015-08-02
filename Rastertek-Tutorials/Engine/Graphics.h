@@ -14,9 +14,8 @@
 ///////////////////////
 #include "Direct3D.h"
 #include "Camera.h"
-#include "Model.h"
-#include "LightShader.h"
-#include "Light.h"
+#include "TextureShader.h"
+#include "Bitmap.h"
 
 /////////////
 // GLOBALS //
@@ -35,9 +34,8 @@ class Graphics
 private:
 	Direct3D* m_Direct3D;
 	Camera* m_Camera;
-	Model* m_Model;
-	Light* m_Light;
-	LightShader* m_LightShader;
+	TextureShader* m_TextureShader;
+	Bitmap* m_Bitmap;
 
 public:
 	Graphics();

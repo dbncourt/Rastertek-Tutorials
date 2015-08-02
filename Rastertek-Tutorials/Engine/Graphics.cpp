@@ -8,9 +8,8 @@ Graphics::Graphics()
 {
 	this->m_Direct3D = nullptr;
 	this->m_Camera = nullptr;
-	this->m_Model = nullptr;
-	this->m_Light = nullptr;
-	this->m_LightShader = nullptr;
+	this->m_TextureShader = nullptr;
+	this->m_Bitmap = nullptr;
 }
 
 Graphics::Graphics(const Graphics& other)
@@ -50,74 +49,55 @@ bool Graphics::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 	//Set the initial position of the camera
 	this->m_Camera->SetPosition(D3DXVECTOR3(0.0f, 0.0f, -10.0f));
 
-	//Create the Model object
-	this->m_Model = new Model();
-	if (!this->m_Model)
+	//Create the TextureShader object
+	this->m_TextureShader = new TextureShader();
+	if (!this->m_TextureShader)
 	{
 		return false;
 	}
-
-	//Initialize the Model object
-	result = this->m_Model->Initialize(this->m_Direct3D->GetDevice(), "cube.txt", L"seafloor.dds");
+	
+	//Initialize the TextureShader object
+	result = this->m_TextureShader->Initialize(this->m_Direct3D->GetDevice(), hwnd);
 	if (!result)
 	{
-		MessageBox(hwnd, L"Could not initialize the Model object", L"Error", MB_OK);
+		MessageBox(hwnd, L"Could not initialize the TextureShader object.", L"Error", MB_OK);
 		return false;
 	}
 
-	//Create the LightShader object
-	this->m_LightShader = new LightShader();
-	if (!this->m_LightShader)
+	//Create the Bitmap object
+	this->m_Bitmap = new Bitmap();
+	if (!this->m_Bitmap)
 	{
 		return false;
 	}
 
-	//Initialize the LightShader object
-	result = this->m_LightShader->Initialize(this->m_Direct3D->GetDevice(), hwnd);
+	//Initialize the Bitmap object
+	result = this->m_Bitmap->Initialize(this->m_Direct3D->GetDevice(), screenWidth, screenHeight, L"seafloor.dds", 256, 256);
 	if (!result)
 	{
-		MessageBox(hwnd, L"Could not initialize the LightShader object", L"Error", MB_OK);
+		MessageBox(hwnd, L"Could not initialize the Bitmap object.", L"Error", MB_OK);
 		return false;
 	}
-
-	//Initialize the Light object
-	this->m_Light = new Light();
-	if (!this->m_Light)
-	{
-		return false;
-	}
-	this->m_Light->SetDiffuseColor(D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f));
-	this->m_Light->SetLightDirection(D3DXVECTOR3(0.0f, 0.0f, 1.0f));
-	this->m_Light->SetAmbientColor(D3DXCOLOR(0.15f, 0.15f, 0.15f, 1.0f));
-	this->m_Light->SetSpecularColor(D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f));
-	this->m_Light->SetSpecularPower(32.0f);
 
 	return true;
 }
 
 void Graphics::Shutdown()
 {
-	//Release the Light object
-	if (this->m_Light)
+	//Release the TextureShader object
+	if (this->m_TextureShader)
 	{
-		delete this->m_Light;
-		this->m_Light = nullptr;
+		this->m_TextureShader->Shutdown();
+		delete this->m_TextureShader;
+		this->m_TextureShader = nullptr;
 	}
 
-	//Release the LightShader object
-	if (this->m_LightShader)
+	//Release the Bitmap object
+	if (this->m_Bitmap)
 	{
-		this->m_LightShader->Shutdown();
-		delete this->m_LightShader;
-		this->m_LightShader = nullptr;
-	}
-
-	//Release the Model object
-	if (this->m_Model)
-	{
-		this->m_Model->Shutdown();
-		delete this->m_Model;
-		this->m_Model = nullptr;
+		this->m_Bitmap->Shutdown();
+		delete this->m_Bitmap;
+		this->m_Bitmap = nullptr;
 	}
 
 	//Release the Camera object
@@ -165,6 +145,7 @@ bool Graphics::Render(float rotation)
 	D3DXMATRIX viewMatrix;
 	D3DXMATRIX projectionMatrix;
 	D3DXMATRIX worldMatrix;
+	D3DXMATRIX orthoMatrix;
 
 	// Clear the buffers to begin the scene
 	this->m_Direct3D->BeginScene(D3DXCOLOR(0.0f, 0.0f, 0.0f, 1.0f));
@@ -176,21 +157,29 @@ bool Graphics::Render(float rotation)
 	this->m_Direct3D->GetWorldMatrix(worldMatrix);
 	this->m_Camera->GetViewMatrix(viewMatrix);
 	this->m_Direct3D->GetProjectionMatrix(projectionMatrix);
+	this->m_Direct3D->GetOrthoMatrix(orthoMatrix);
 
-	//Rotate the world matrix by the rotation value so that the triangle will spin
-	D3DXMatrixRotationY(&worldMatrix, rotation);
+	//Turn off the Z-Buffer to begin all 2D rendering
+	this->m_Direct3D->TurnZBufferOff();
 
-	// Put the model vertex and index buffers on the graphics pipeline to prepare them for drawing
-	this->m_Model->Render(this->m_Direct3D->GetDeviceContext());
-
-	// Render the model using the color shader
-	result = this->m_LightShader->Render(this->m_Direct3D->GetDeviceContext(), this->m_Model->GetIndexCount(), worldMatrix, viewMatrix, projectionMatrix, this->m_Model->GetTexture(), this->m_Light->GetLightDirection(), this->m_Light->GetAmbientColor(), this->m_Light->GetDiffuseColor(), this->m_Camera->GetPosition(), this->m_Light->GetSpecularColor(), this->m_Light->GetSpecularPower());
+	//Put the bitmap vertex and index buffer on the graphics pipeline to prepare them for drawing
+	result = this->m_Bitmap->Render(this->m_Direct3D->GetDeviceContext(), 150, 150);
 	if (!result)
 	{
 		return false;
 	}
 
-	// Present the rendered scene to the screen
+	//Render the bitmap with the texture shader
+	result = this->m_TextureShader->Render(this->m_Direct3D->GetDeviceContext(), this->m_Bitmap->GetIndexCount(), worldMatrix, viewMatrix, orthoMatrix, this->m_Bitmap->GetTexture());
+	if (!result)
+	{
+		return false;
+	}
+
+	//Turn the Z-Buffer back on now that all 2D rendering has completed
+	this->m_Direct3D->TurnZBufferOn();
+
+	//Present the rendered scene to the screen
 	this->m_Direct3D->EndScene();
 
 	return true;
