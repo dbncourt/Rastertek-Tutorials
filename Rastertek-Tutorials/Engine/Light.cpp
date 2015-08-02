@@ -44,3 +44,23 @@ D3DXCOLOR Light::GetAmbientColor()
 {
 	return this->m_ambientColor;
 }
+
+void Light::SetSpecularColor(D3DXCOLOR specularColor)
+{
+	this->m_specularColor = specularColor;
+}
+
+D3DXCOLOR Light::GetSpecularColor()
+{
+	return this->m_specularColor;
+}
+
+void Light::SetSpecularPower(float specularPower)
+{
+	this->m_specularPower = specularPower;
+}
+
+float Light::GetSpecularPower()
+{
+	return this->m_specularPower;
+}

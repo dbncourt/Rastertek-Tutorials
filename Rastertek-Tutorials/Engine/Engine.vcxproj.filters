@@ -102,5 +102,16 @@
     <Text Include="cube.txt">
       <Filter>Resource Files\Model</Filter>
     </Text>
+    <Text Include="model.txt">
+      <Filter>Resource Files\Model</Filter>
+    </Text>
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="Red.dds">
+      <Filter>Resource Files\Texture</Filter>
+    </Image>
+    <Image Include="seafloor.dds">
+      <Filter>Resource Files\Texture</Filter>
+    </Image>
   </ItemGroup>
 </Project>

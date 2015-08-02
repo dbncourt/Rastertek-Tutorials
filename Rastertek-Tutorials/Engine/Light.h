@@ -18,6 +18,8 @@ private:
 	D3DXCOLOR m_diffuseColor;
 	D3DXVECTOR3 m_lightDirection;
 	D3DXCOLOR m_ambientColor;
+	D3DXCOLOR m_specularColor;
+	float m_specularPower;
 
 public:
 	Light();
@@ -32,5 +34,11 @@ public:
 
 	void SetAmbientColor(D3DXCOLOR ambientColor);
 	D3DXCOLOR GetAmbientColor();
+
+	void SetSpecularColor(D3DXCOLOR specularColor);
+	D3DXCOLOR GetSpecularColor();
+
+	void SetSpecularPower(float specularPower);
+	float GetSpecularPower();
 };
 #endif

@@ -187,6 +187,11 @@
   </ItemGroup>
   <ItemGroup>
     <Text Include="cube.txt" />
+    <Text Include="model.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="Red.dds" />
+    <Image Include="seafloor.dds" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
