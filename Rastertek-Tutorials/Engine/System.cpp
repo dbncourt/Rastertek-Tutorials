@@ -1,3 +1,6 @@
+////////////////////////////////////////////////////////////////////////////////
+// Filename: System.cpp
+////////////////////////////////////////////////////////////////////////////////
 #include "System.h"
 
 
@@ -17,6 +20,8 @@ System::~System()
 
 bool System::Initialize()
 {
+	bool result;
+
 	int screenWidth;
 	int screenHeight;
 
@@ -25,7 +30,7 @@ bool System::Initialize()
 	screenHeight = 0;
 
 	//Initialize the windows API
-	InitializeWindows(screenWidth, screenHeight);
+	System::InitializeWindows(screenWidth, screenHeight);
 
 	//Create the input object. This object will be used to handle reading the keyboard input from the user
 	this->m_Input = new Input();
@@ -35,7 +40,12 @@ bool System::Initialize()
 	}
 
 	//Initialize the input object
-	this->m_Input->Initialize();
+	result = this->m_Input->Initialize(this->m_hinstance, this->m_hwnd, screenWidth, screenHeight);
+	if (!result)
+	{
+		MessageBox(this->m_hwnd, L"Could not initialize the input object", L"Error", MB_OK);
+		return false;
+	}
 
 	//Create the graphics object. This object will handle rendering all the graphics for this application
 	this->m_Graphics = new Graphics();
@@ -43,9 +53,8 @@ bool System::Initialize()
 	{
 		return false;
 	}
-
 	//Initialize the graphics object
-	return this->m_Graphics->Initialize(screenWidth, screenHeight, this->m_hwnd);
+	return this->m_Graphics->Initialize(screenWidth, screenHeight, m_hwnd);
 }
 
 void System::Shutdown()
@@ -61,16 +70,19 @@ void System::Shutdown()
 	//Release the input object
 	if (this->m_Input)
 	{
+		this->m_Input->Shutdown();
 		delete this->m_Input;
 		this->m_Input = nullptr;
 	}
 
 	// Shutdown the window.
-	ShutdownWindows();
+	System::ShutdownWindows();
 }
 
 void System::Run()
 {
+	bool result;
+
 	MSG msg;
 	bool done;
 
@@ -96,10 +108,18 @@ void System::Run()
 		else
 		{
 			//Otherwise, do the frame processing
-			if (!Frame())
+			result = Frame();
+			if (!result)
 			{
+				MessageBox(this->m_hwnd, L"Frame Processing Failed", L"Error", MB_OK);
 				done = true;
 			}
+		}
+
+		//Check if the user pressed escape and wants to quit
+		if (this->m_Input->IsEscapePressed())
+		{
+			done = true;
 		}
 	}
 }
@@ -107,15 +127,28 @@ void System::Run()
 bool System::Frame()
 {
 	bool result;
+	int mouseX;
+	int mouseY;
 
-	//Check if the user pressed escape and wants to exit the application
-	if (this->m_Input->IsKeyDown(VK_ESCAPE))
+	//Do the input frame processing
+	result = this->m_Input->Frame();
+	if (!result)
 	{
 		return false;
 	}
 
+	//Get the location of the mouse from the input object
+	this->m_Input->GetMouseLocation(mouseX, mouseY);
+
 	//Do the frame processing for the graphics object
-	result = this->m_Graphics->Frame();
+	result = this->m_Graphics->Frame(mouseX, mouseY);
+	if (!result)
+	{
+		return false;
+	}
+
+	//Finally render the graphics to the screen
+	result = this->m_Graphics->Render();
 	if (!result)
 	{
 		return false;
@@ -126,26 +159,7 @@ bool System::Frame()
 
 LRESULT CALLBACK System::MessageHandler(HWND hwnd, UINT umsg, WPARAM wParam, LPARAM lParam)
 {
-	switch (umsg)
-	{
-		//Check if a key has been pressed on the keyboard
-	case WM_KEYDOWN:
-	{
-		//If a key is pressed, send it to the input object so it can record that state.
-		this->m_Input->KeyDown((unsigned int)wParam);
-		return 0;
-	}
-	case WM_KEYUP:
-	{
-		//If a key is released, send it to the input object so it can record that state.
-		this->m_Input->KeyUp((unsigned int)wParam);
-		return 0;
-	}
-	default:
-	{
-		return DefWindowProc(hwnd, umsg, wParam, lParam);
-	}
-	}
+	return DefWindowProc(hwnd, umsg, wParam, lParam);
 }
 
 void System::InitializeWindows(int& screenWidth, int& screenHeight)
@@ -168,7 +182,7 @@ void System::InitializeWindows(int& screenWidth, int& screenHeight)
 	wc.lpfnWndProc = WndProc;
 	wc.cbClsExtra = 0;
 	wc.cbWndExtra = 0;
-	wc.hInstance = this->m_hinstance;
+	wc.hInstance = m_hinstance;
 	wc.hIcon = LoadIcon(nullptr, IDI_WINLOGO);
 	wc.hIconSm = wc.hIcon;
 	wc.hCursor = LoadCursor(nullptr, IDC_ARROW);
@@ -240,8 +254,8 @@ void System::ShutdownWindows()
 	this->m_hwnd = nullptr;
 
 	//Remove the application instance
-	UnregisterClass(m_applicationName, this->m_hinstance);
-	this->m_hinstance = nullptr;
+	UnregisterClass(this->m_applicationName, this->m_hinstance);
+	m_hinstance = nullptr;
 
 	//Release the pointer to this class
 	ApplicationHandle = nullptr;

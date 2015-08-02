@@ -61,7 +61,7 @@ bool Graphics::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 	result = this->m_Text->Initialize(this->m_Direct3D->GetDevice(), this->m_Direct3D->GetDeviceContext(), hwnd, screenWidth, screenHeight, baseViewMatrix);
 	if (!result)
 	{
-		MessageBox(hwnd, L"Could not initialize the text object.", L"Error", MB_OK);
+		MessageBox(hwnd, L"Could not initialize the Text object.", L"Error", MB_OK);
 		return false;
 	}
 	return true;
@@ -93,29 +93,24 @@ void Graphics::Shutdown()
 	}
 }
 
-bool Graphics::Frame()
+bool Graphics::Frame(int mouseX, int mouseY)
 {
 	bool result;
 
-	static float rotation = 0.0f;
-
-	//Update the rotation variable each frame
-	rotation += (float)D3DX_PI * 0.005f;
-	if (rotation > 360.0f)
-	{
-		rotation = -360.0f;
-	}
-	//Render the graphics scene
-	result = Graphics::Render(rotation);
+	//Set the location of the mouse
+	result = this->m_Text->SetMousePosition(mouseX, mouseY, this->m_Direct3D->GetDeviceContext());
 	if (!result)
 	{
 		return false;
 	}
 
+	//Set the position of the camera
+	this->m_Camera->SetPosition(D3DXVECTOR3(0.0f, 0.0f, -10.0f));
+
 	return true;
 }
 
-bool Graphics::Render(float rotation)
+bool Graphics::Render()
 {
 	bool result;
 	D3DXMATRIX viewMatrix;
@@ -153,9 +148,6 @@ bool Graphics::Render(float rotation)
 
 	//Turn the Z-Buffer back on now that all 2D rendering has completed
 	this->m_Direct3D->TurnZBufferOn();
-
-	//Rotate the world matrix by the rotation value so that the triangle will spin
-	D3DXMatrixRotationY(&worldMatrix, rotation);
 
 	//Present the rendered scene to the screen
 	this->m_Direct3D->EndScene();
