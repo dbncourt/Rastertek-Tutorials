@@ -8,6 +8,7 @@ System::System()
 {
 	this->m_Input = nullptr;
 	this->m_Graphics = nullptr;
+	this->m_Sound = nullptr;
 }
 
 System::System(const System& other)
@@ -54,7 +55,27 @@ bool System::Initialize()
 		return false;
 	}
 	//Initialize the graphics object
-	return this->m_Graphics->Initialize(screenWidth, screenHeight, m_hwnd);
+	result = this->m_Graphics->Initialize(screenWidth, screenHeight, this->m_hwnd);
+	if (!result)
+	{
+		return false;
+	}
+
+	//Create the Sound object
+	this->m_Sound = new Sound();
+	if (!this->m_Sound)
+	{
+		return false;
+	}
+
+	//Initialize the Sound object
+	result = this->m_Sound->Initialize(this->m_hwnd);
+	if (!result)
+	{
+		MessageBox(this->m_hwnd, L"Could not initialize DirectSound object", L"Error", MB_OK);
+		return false;
+	}
+	return true;
 }
 
 void System::Shutdown()
@@ -73,6 +94,14 @@ void System::Shutdown()
 		this->m_Input->Shutdown();
 		delete this->m_Input;
 		this->m_Input = nullptr;
+	}
+
+	//Release the sound object
+	if (this->m_Sound)
+	{
+		this->m_Sound->Shutdown();
+		delete this->m_Sound;
+		this->m_Sound = nullptr;
 	}
 
 	// Shutdown the window.

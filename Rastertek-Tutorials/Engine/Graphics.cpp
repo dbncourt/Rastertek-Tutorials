@@ -8,7 +8,6 @@ Graphics::Graphics()
 {
 	this->m_Direct3D = nullptr;
 	this->m_Camera = nullptr;
-	this->m_Text = nullptr;
 }
 
 Graphics::Graphics(const Graphics& other)
@@ -50,32 +49,11 @@ bool Graphics::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 	this->m_Camera->Render();
 	this->m_Camera->GetViewMatrix(baseViewMatrix);
 
-	//Create the text object
-	this->m_Text = new Text();
-	if (!this->m_Text)
-	{
-		return false;
-	}
-
-	//Initialize the text object
-	result = this->m_Text->Initialize(this->m_Direct3D->GetDevice(), this->m_Direct3D->GetDeviceContext(), hwnd, screenWidth, screenHeight, baseViewMatrix);
-	if (!result)
-	{
-		MessageBox(hwnd, L"Could not initialize the Text object.", L"Error", MB_OK);
-		return false;
-	}
 	return true;
 }
 
 void Graphics::Shutdown()
 {
-	//Release the Text object
-	if (this->m_Text)
-	{
-		this->m_Text->Shutdown();
-		delete this->m_Text;
-		this->m_Text = nullptr;
-	}
 
 	//Release the Camera object
 	if (this->m_Camera)
@@ -95,15 +73,6 @@ void Graphics::Shutdown()
 
 bool Graphics::Frame(int mouseX, int mouseY)
 {
-	bool result;
-
-	//Set the location of the mouse
-	result = this->m_Text->SetMousePosition(mouseX, mouseY, this->m_Direct3D->GetDeviceContext());
-	if (!result)
-	{
-		return false;
-	}
-
 	//Set the position of the camera
 	this->m_Camera->SetPosition(D3DXVECTOR3(0.0f, 0.0f, -10.0f));
 
@@ -129,25 +98,6 @@ bool Graphics::Render()
 	this->m_Direct3D->GetWorldMatrix(worldMatrix);
 	this->m_Direct3D->GetProjectionMatrix(projectionMatrix);
 	this->m_Direct3D->GetOrthoMatrix(orthoMatrix);
-
-	//Turn off the Z-Buffer to begin all 2D rendering
-	this->m_Direct3D->TurnZBufferOff();
-
-	//Turn on the alpha blending before rendering the text
-	this->m_Direct3D->TurnOnAlphaBlending();
-
-	//Render the text strings
-	result = this->m_Text->Render(this->m_Direct3D->GetDeviceContext(), worldMatrix, orthoMatrix);
-	if (!result)
-	{
-		return false;
-	}
-
-	//Turn off the alpha blending after rendering the text
-	this->m_Direct3D->TurnOffAlphaBlending();
-
-	//Turn the Z-Buffer back on now that all 2D rendering has completed
-	this->m_Direct3D->TurnZBufferOn();
 
 	//Present the rendered scene to the screen
 	this->m_Direct3D->EndScene();

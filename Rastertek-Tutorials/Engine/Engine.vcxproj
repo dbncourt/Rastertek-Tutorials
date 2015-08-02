@@ -151,25 +151,19 @@
   <ItemGroup>
     <ClInclude Include="Camera.h" />
     <ClInclude Include="Direct3D.h" />
-    <ClInclude Include="Font.h" />
-    <ClInclude Include="FontShader.h" />
     <ClInclude Include="Graphics.h" />
     <ClInclude Include="Input.h" />
+    <ClInclude Include="Sound.h" />
     <ClInclude Include="System.h" />
-    <ClInclude Include="Text.h" />
-    <ClInclude Include="Texture.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="Direct3D.cpp" />
-    <ClCompile Include="Font.cpp" />
-    <ClCompile Include="FontShader.cpp" />
     <ClCompile Include="Graphics.cpp" />
     <ClCompile Include="Input.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="Sound.cpp" />
     <ClCompile Include="System.cpp" />
-    <ClCompile Include="Text.cpp" />
-    <ClCompile Include="Texture.cpp" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="FontPixelShader.hlsl">
@@ -186,10 +180,7 @@
     </FxCompile>
   </ItemGroup>
   <ItemGroup>
-    <Text Include="fontdata.txt" />
-  </ItemGroup>
-  <ItemGroup>
-    <Image Include="font.dds" />
+    <Media Include="sound01.wav" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

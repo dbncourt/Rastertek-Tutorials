@@ -14,7 +14,6 @@
 ///////////////////////
 #include "Direct3D.h"
 #include "Camera.h"
-#include "Text.h"
 
 /////////////
 // GLOBALS //
@@ -33,7 +32,6 @@ class Graphics
 private:
 	Direct3D* m_Direct3D;
 	Camera* m_Camera;
-	Text* m_Text;
 
 public:
 	Graphics();
