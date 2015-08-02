@@ -54,7 +54,13 @@ bool System::Initialize()
 		return false;
 	}
 	//Initialize the graphics object
-	return this->m_Graphics->Initialize(screenWidth, screenHeight, this->m_hwnd);
+	result = this->m_Graphics->Initialize(screenWidth, screenHeight, this->m_hwnd);
+	if (!result)
+	{
+		return false;
+	}
+
+	return true;
 }
 
 void System::Shutdown()
@@ -108,7 +114,7 @@ void System::Run()
 		else
 		{
 			//Otherwise, do the frame processing
-			result = Frame();
+			result = System::Frame();
 			if (!result)
 			{
 				MessageBox(this->m_hwnd, L"Frame Processing Failed", L"Error", MB_OK);
