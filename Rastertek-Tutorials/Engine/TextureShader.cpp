@@ -275,18 +275,18 @@ bool TextureShader::SetShaderParameters(ID3D11DeviceContext* deviceContext, D3DX
 	D3DXMatrixTranspose(&viewMatrix, &viewMatrix);
 	D3DXMatrixTranspose(&projectionMatrix, &projectionMatrix);
 
-	D3D11_MAPPED_SUBRESOURCE mappedResource;
+	D3D11_MAPPED_SUBRESOURCE mappedSubresource;
 	MatrixBufferType* matrixDataPtr;
 
 	//Lock the constant buffer so it can be written to
-	result = deviceContext->Map(this->m_matrixBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource);
+	result = deviceContext->Map(this->m_matrixBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedSubresource);
 	if (FAILED(result))
 	{
 		return false;
 	}
 
 	//Get a pointer to the data in the constant buffer
-	matrixDataPtr = (MatrixBufferType*)mappedResource.pData;
+	matrixDataPtr = (MatrixBufferType*)mappedSubresource.pData;
 
 	//Copy the matrices into the constant buffer
 	matrixDataPtr->world = worldMatrix;
