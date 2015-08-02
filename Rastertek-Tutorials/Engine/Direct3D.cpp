@@ -397,7 +397,6 @@ void Direct3D::Shutdown()
 		this->m_swapChain->Release();
 		this->m_swapChain = nullptr;
 	}
-	return;
 }
 
 void Direct3D::BeginScene(D3DXCOLOR backBufferColor)
@@ -410,8 +409,6 @@ void Direct3D::BeginScene(D3DXCOLOR backBufferColor)
 
 	//Clear the depth buffer
 	this->m_deviceContext->ClearDepthStencilView(this->m_depthStencilView, D3D11_CLEAR_DEPTH, 1.0f, 0);
-
-	return;
 }
 
 void Direct3D::EndScene()
@@ -427,7 +424,6 @@ void Direct3D::EndScene()
 		//Present as fast as possible
 		this->m_swapChain->Present(0, 0);
 	}
-	return;
 }
 
 ID3D11Device* Direct3D::GetDevice()
@@ -443,24 +439,20 @@ ID3D11DeviceContext* Direct3D::GetDeviceContext()
 void Direct3D::GetProjectionMatrix(D3DXMATRIX& projectionMatrix)
 {
 	projectionMatrix = this->m_projectionMatrix;
-	return;
 }
 
 void Direct3D::GetWorldMatrix(D3DXMATRIX& worldMatrix)
 {
 	worldMatrix = this->m_worldMatrix;
-	return;
 }
 
 void Direct3D::GetOrthoMatrix(D3DXMATRIX& orthoMatrix)
 {
 	orthoMatrix = this->m_orthoMatrix;
-	return;
 }
 
 void Direct3D::GetVideoCardInfo(char* cardName, int& memory)
 {
 	strcpy_s(cardName, 128, this->m_videoCardDescription);
 	memory = this->m_videoCardMemory;
-	return;
 }
