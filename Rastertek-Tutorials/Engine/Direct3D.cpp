@@ -329,8 +329,8 @@ bool Direct3D::Initialize(int screenWidth, int screenHeight, bool vsync, HWND hw
 	float fieldOfView = (float)D3DX_PI / 4.0f;
 	float screenAspect = (float)screenWidth / (float)screenHeight;
 
-	//Create the projection matrix for 3d rendering
-	D3DXMatrixPerspectiveFovLH(&this->m_worldMatrix, fieldOfView, screenAspect, screenNear, screenDepth);
+	//Create the projection matrix for 3D rendering
+	D3DXMatrixPerspectiveFovLH(&this->m_projectionMatrix, fieldOfView, screenAspect, screenNear, screenDepth);
 
 	//Initialize the world matrix to the identity matrix
 	D3DXMatrixIdentity(&this->m_worldMatrix);
