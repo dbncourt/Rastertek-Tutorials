@@ -23,8 +23,8 @@ private:
 		D3DXVECTOR4 color;
 	};
 
-	ID3D11Buffer *m_vertexBuffer;
-	ID3D11Buffer *m_indexBuffer;
+	ID3D11Buffer* m_vertexBuffer;
+	ID3D11Buffer* m_indexBuffer;
 	UINT m_vertexCount;
 	UINT m_indexCount;
 
