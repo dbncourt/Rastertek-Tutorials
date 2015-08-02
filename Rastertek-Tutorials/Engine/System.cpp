@@ -27,7 +27,7 @@ bool System::Initialize()
 	screenHeight = 0;
 
 	//Initialize the windows API
-	InitializeWindows(screenWidth, screenHeight);
+	System::InitializeWindows(screenWidth, screenHeight);
 
 	//Create the input object. This object will be used to handle reading the keyboard input from the user
 	this->m_Input = new Input();
@@ -73,7 +73,7 @@ void System::Shutdown()
 	}
 
 	// Shutdown the window.
-	ShutdownWindows();
+	System::ShutdownWindows();
 }
 
 void System::Run()
