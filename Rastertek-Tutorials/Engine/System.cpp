@@ -96,7 +96,7 @@ void System::Run()
 		else
 		{
 			//Otherwise, do the frame processing
-			if (!Frame())
+			if (!System::Frame())
 			{
 				done = true;
 			}
