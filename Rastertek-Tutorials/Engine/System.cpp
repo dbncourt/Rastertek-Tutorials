@@ -54,7 +54,7 @@ bool System::Initialize()
 		return false;
 	}
 	//Initialize the graphics object
-	return this->m_Graphics->Initialize(screenWidth, screenHeight, m_hwnd);
+	return this->m_Graphics->Initialize(screenWidth, screenHeight, this->m_hwnd);
 }
 
 void System::Shutdown()
