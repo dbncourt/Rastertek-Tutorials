@@ -45,9 +45,6 @@
     <ClInclude Include="Camera.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Model.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Texture.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -77,9 +74,6 @@
     <ClCompile Include="Camera.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Model.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Texture.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -91,17 +85,6 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <Text Include="cube.txt">
-      <Filter>Resource Files\Model</Filter>
-    </Text>
-    <Text Include="model.txt">
-      <Filter>Resource Files\Model</Filter>
-    </Text>
-  </ItemGroup>
-  <ItemGroup>
-    <Image Include="Red.dds">
-      <Filter>Resource Files\Texture</Filter>
-    </Image>
     <Image Include="seafloor.dds">
       <Filter>Resource Files\Texture</Filter>
     </Image>

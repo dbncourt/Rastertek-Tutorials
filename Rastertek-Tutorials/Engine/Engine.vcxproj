@@ -154,7 +154,6 @@
     <ClInclude Include="Direct3D.h" />
     <ClInclude Include="Graphics.h" />
     <ClInclude Include="Input.h" />
-    <ClInclude Include="Model.h" />
     <ClInclude Include="System.h" />
     <ClInclude Include="Texture.h" />
     <ClInclude Include="TextureShader.h" />
@@ -166,17 +165,11 @@
     <ClCompile Include="Graphics.cpp" />
     <ClCompile Include="Input.cpp" />
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="Model.cpp" />
     <ClCompile Include="System.cpp" />
     <ClCompile Include="Texture.cpp" />
     <ClCompile Include="TextureShader.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <Text Include="cube.txt" />
-    <Text Include="model.txt" />
-  </ItemGroup>
-  <ItemGroup>
-    <Image Include="Red.dds" />
     <Image Include="seafloor.dds" />
   </ItemGroup>
   <ItemGroup>
