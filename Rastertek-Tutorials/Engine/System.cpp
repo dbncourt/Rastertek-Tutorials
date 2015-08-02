@@ -17,6 +17,8 @@ System::~System()
 
 bool System::Initialize()
 {
+	bool result;
+
 	int screenWidth;
 	int screenHeight;
 
@@ -45,7 +47,13 @@ bool System::Initialize()
 	}
 
 	//Initialize the graphics object
-	return this->m_Graphics->Initialize(screenWidth, screenHeight, this->m_hwnd);
+	result = this->m_Graphics->Initialize(screenWidth, screenHeight, this->m_hwnd);
+	if (!result)
+	{
+		return false;
+	}
+
+	return true;
 }
 
 void System::Shutdown()
