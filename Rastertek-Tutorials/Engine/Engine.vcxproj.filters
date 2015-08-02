@@ -39,9 +39,6 @@
     <ClInclude Include="System.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Direct3D.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Graphics.cpp">
@@ -54,9 +51,6 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="System.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Direct3D.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
