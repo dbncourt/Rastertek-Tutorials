@@ -19,6 +19,8 @@ Graphics::~Graphics()
 
 bool Graphics::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 {
+	bool result;
+
 	//Create the Direct3D object
 	this->m_Direct3D = new Direct3D();
 	if (!this->m_Direct3D)
@@ -27,7 +29,8 @@ bool Graphics::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 	}
 
 	//Initialize the Direct3D object
-	if (!this->m_Direct3D->Initialize(screenWidth, screenHeight, VSYNC_ENABLED, hwnd, FULL_SCREEN, SCREEN_DEPTH, SCREEN_NEAR))
+	result = this->m_Direct3D->Initialize(screenWidth, screenHeight, VSYNC_ENABLED, hwnd, FULL_SCREEN, SCREEN_DEPTH, SCREEN_NEAR);
+	if (!result)
 	{
 		MessageBox(hwnd, L"Could not initialize Direct3D", L"Error", MB_OK);
 		return false;
@@ -51,7 +54,7 @@ bool Graphics::Frame()
 	bool result;
 
 	//Render the graphics scene
-	result = this->Render();
+	result = Graphics::Render();
 	if (!result)
 	{
 		return false;
@@ -67,7 +70,6 @@ bool Graphics::Render()
 
 	//Present the rendered scene to the screen
 	this->m_Direct3D->EndScene();
-
 
 	return true;
 }
