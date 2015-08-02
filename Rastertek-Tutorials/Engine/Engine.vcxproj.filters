@@ -98,4 +98,9 @@
       <Filter>Resource Files\Shader\Pixel</Filter>
     </FxCompile>
   </ItemGroup>
+  <ItemGroup>
+    <Text Include="cube.txt">
+      <Filter>Resource Files\Model</Filter>
+    </Text>
+  </ItemGroup>
 </Project>
