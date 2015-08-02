@@ -13,6 +13,21 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="Resource Files\Texture">
+      <UniqueIdentifier>{a98f9708-1a1e-4f51-8d5d-095c64994777}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resource Files\Model">
+      <UniqueIdentifier>{0a462e09-9f98-4eb2-9db8-27f10b18eb8f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resource Files\Shader">
+      <UniqueIdentifier>{1b7b10e7-5271-4024-a7f2-517235188cf0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resource Files\Shader\Vertex">
+      <UniqueIdentifier>{0df268c2-74ca-4eed-b4e2-b6bc5079ca0e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resource Files\Shader\Pixel">
+      <UniqueIdentifier>{9534fc2b-71b5-454d-9b30-d677315a9b86}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Graphics.h">
@@ -22,6 +37,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="System.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Direct3D.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -36,6 +54,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="System.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Direct3D.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

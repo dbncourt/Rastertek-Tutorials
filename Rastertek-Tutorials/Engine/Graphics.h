@@ -25,10 +25,10 @@ class Graphics
 {
 public:
 	Graphics();
-	Graphics(const Graphics&);
+	Graphics(const Graphics& other);
 	~Graphics();
 
-	bool Initialize(int, int, HWND);
+	bool Initialize(int screenWidth, int screenHeight, HWND hwnd);
 	void Shutdown();
 	bool Frame();
 

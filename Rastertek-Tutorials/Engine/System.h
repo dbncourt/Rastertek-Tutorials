@@ -34,18 +34,18 @@ private:
 
 public:
 	System();
-	System(const System&);
+	System(const System& other);
 	~System();
 
 	bool Initialize();
 	void Shutdown();
 	void Run();
 
-	LRESULT CALLBACK MessageHandler(HWND, UINT, WPARAM, LPARAM);
+	LRESULT CALLBACK MessageHandler(HWND hwnd, UINT umsg, WPARAM wParam, LPARAM lParam);
 
 private:
 	bool Frame();
-	void InitializeWindows(int&, int&);
+	void InitializeWindows(int& screenWidth, int& screenHeight);
 	void ShutdownWindows();
 
 };
@@ -53,7 +53,7 @@ private:
 /////////////////////////
 // FUNCTION PROTOTYPES //
 /////////////////////////
-static LRESULT CALLBACK WndProc(HWND, UINT, WPARAM, LPARAM);
+static LRESULT CALLBACK WndProc(HWND hwnd, UINT umessage, WPARAM wParam, LPARAM lParam);
 
 /////////////
 // GLOBALS //
