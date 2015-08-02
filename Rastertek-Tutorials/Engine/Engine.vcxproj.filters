@@ -45,16 +45,16 @@
     <ClInclude Include="Camera.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Model.h">
+    <ClInclude Include="Font.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="FontShader.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Text.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Texture.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Bitmap.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="TextureShader.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -77,41 +77,35 @@
     <ClCompile Include="Camera.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Model.cpp">
+    <ClCompile Include="Font.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="FontShader.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Text.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Texture.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Bitmap.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="TextureShader.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <Text Include="cube.txt">
-      <Filter>Resource Files\Model</Filter>
-    </Text>
-    <Text Include="model.txt">
-      <Filter>Resource Files\Model</Filter>
-    </Text>
-  </ItemGroup>
-  <ItemGroup>
-    <Image Include="Red.dds">
-      <Filter>Resource Files\Texture</Filter>
-    </Image>
-    <Image Include="seafloor.dds">
-      <Filter>Resource Files\Texture</Filter>
-    </Image>
-  </ItemGroup>
-  <ItemGroup>
-    <FxCompile Include="TexturePixelShader.hlsl">
-      <Filter>Resource Files\Shader\Pixel</Filter>
-    </FxCompile>
-    <FxCompile Include="TextureVertexShader.hlsl">
+    <FxCompile Include="FontVertexShader.hlsl">
       <Filter>Resource Files\Shader\Vertex</Filter>
     </FxCompile>
+    <FxCompile Include="FontPixelShader.hlsl">
+      <Filter>Resource Files\Shader\Pixel</Filter>
+    </FxCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="fontdata.txt">
+      <Filter>Resource Files\Model</Filter>
+    </Text>
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="font.dds">
+      <Filter>Resource Files\Texture</Filter>
+    </Image>
   </ItemGroup>
 </Project>

@@ -20,10 +20,10 @@ private:
 
 public:
 	Texture();
-	Texture(const Texture& other);
+	Texture(const Texture&);
 	~Texture();
 
-	bool Initialize(ID3D11Device* device, WCHAR* fileName);
+	bool Initialize(ID3D11Device* device, WCHAR* filename);
 	void Shutdown();
 
 	ID3D11ShaderResourceView* GetTexture();
