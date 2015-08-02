@@ -103,4 +103,9 @@
       <Filter>Resource Files\Model</Filter>
     </Text>
   </ItemGroup>
+  <ItemGroup>
+    <Image Include="seafloor.dds">
+      <Filter>Resource Files\Texture</Filter>
+    </Image>
+  </ItemGroup>
 </Project>
