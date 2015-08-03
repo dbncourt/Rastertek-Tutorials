@@ -15,7 +15,7 @@
 #include "Direct3D.h"
 #include "Camera.h"
 #include "Model.h"
-#include "LightMapShader.h"
+#include "AlphaMapShader.h"
 
 /////////////
 // GLOBALS //
@@ -35,7 +35,7 @@ private:
 	Direct3D* m_Direct3D;
 	Camera* m_Camera;
 	Model* m_Model;
-	LightMapShader* m_LightMapShader;
+	AlphaMapShader* m_AlphaMapShader;
 
 public:
 	Graphics();

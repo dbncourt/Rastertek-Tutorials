@@ -54,7 +54,7 @@
     <ClInclude Include="TextureArray.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="LightMapShader.h">
+    <ClInclude Include="AlphaMapShader.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -83,15 +83,15 @@
     <ClCompile Include="TextureArray.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="LightMapShader.cpp">
+    <ClCompile Include="AlphaMapShader.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <FxCompile Include="LightMapPixelShader.hlsl">
+    <FxCompile Include="AlphaMapPixelShader.hlsl">
       <Filter>Resource Files\Shader\Pixel</Filter>
     </FxCompile>
-    <FxCompile Include="LightMapVertexShader.hlsl">
+    <FxCompile Include="AlphaMapVertexShader.hlsl">
       <Filter>Resource Files\Shader\Vertex</Filter>
     </FxCompile>
   </ItemGroup>
@@ -100,6 +100,9 @@
       <Filter>Resource Files\Texture</Filter>
     </Image>
     <Image Include="light01.dds">
+      <Filter>Resource Files\Texture</Filter>
+    </Image>
+    <Image Include="alpha01.dds">
       <Filter>Resource Files\Texture</Filter>
     </Image>
   </ItemGroup>

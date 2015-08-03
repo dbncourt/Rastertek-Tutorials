@@ -1,8 +1,8 @@
 ////////////////////////////////////////////////////////////////////////////////
-// Filename: LightMapShader.h
+// Filename: AlphaMapShader.h
 ////////////////////////////////////////////////////////////////////////////////
-#ifndef _LIGHTMAPSHADER_H_
-#define _LIGHTMAPSHADER_H_
+#ifndef _ALPHAMAPSHADER_H_
+#define _ALPHAMAPSHADER_H_
 
 //////////////
 // INCLUDES //
@@ -14,9 +14,9 @@
 using namespace std;
 
 ////////////////////////////////////////////////////////////////////////////////
-// Class name: LightMapShader
+// Class name: AlphaMapShader
 ////////////////////////////////////////////////////////////////////////////////
-class LightMapShader
+class AlphaMapShader
 {
 
 private:
@@ -35,9 +35,9 @@ private:
 
 
 public:
-	LightMapShader();
-	LightMapShader(const LightMapShader& other);
-	~LightMapShader();
+	AlphaMapShader();
+	AlphaMapShader(const AlphaMapShader& other);
+	~AlphaMapShader();
 
 	bool Initialize(ID3D11Device* device, HWND hwnd);
 	void Shutdown();

@@ -9,7 +9,7 @@ Graphics::Graphics()
 	this->m_Direct3D = nullptr;
 	this->m_Camera = nullptr;
 	this->m_Model = nullptr;
-	this->m_LightMapShader = nullptr;
+	this->m_AlphaMapShader = nullptr;
 }
 
 Graphics::Graphics(const Graphics& other)
@@ -57,25 +57,25 @@ bool Graphics::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 	}
 
 	//Initialize the Model object
-	result = this->m_Model->Initialize(this->m_Direct3D->GetDevice(), "square.txt", L"stone01.dds", L"light01.dds");
+	result = this->m_Model->Initialize(this->m_Direct3D->GetDevice(), "square.txt", L"stone01.dds", L"dirt01.dds", L"alpha01.dds");
 	if (!result)
 	{
 		MessageBox(hwnd, L"Could not initialize the Model object", L"Error", MB_OK);
 		return false;
 	}
 
-	//Create the LightMapShader object
-	this->m_LightMapShader = new LightMapShader();
-	if (!this->m_LightMapShader)
+	//Create the AlphaMapShader object
+	this->m_AlphaMapShader = new AlphaMapShader();
+	if (!this->m_AlphaMapShader)
 	{
 		return false;
 	}
 
-	//Initialize the LightMapShader object
-	result = this->m_LightMapShader->Initialize(this->m_Direct3D->GetDevice(), hwnd);
+	//Initialize the AlphaMapShader object
+	result = this->m_AlphaMapShader->Initialize(this->m_Direct3D->GetDevice(), hwnd);
 	if (!result)
 	{
-		MessageBox(hwnd, L"Could not initialize the LightMapShader object", L"Error", MB_OK);
+		MessageBox(hwnd, L"Could not initialize the AlphaMapShader object", L"Error", MB_OK);
 		return false;
 	}
 
@@ -84,12 +84,12 @@ bool Graphics::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 
 void Graphics::Shutdown()
 {
-	//Release the LightMapShader object
-	if (this->m_LightMapShader)
+	//Release the AlphaMapShader object
+	if (this->m_AlphaMapShader)
 	{
-		this->m_LightMapShader->Shutdown();
-		delete this->m_LightMapShader;
-		this->m_LightMapShader = nullptr;
+		this->m_AlphaMapShader->Shutdown();
+		delete this->m_AlphaMapShader;
+		this->m_AlphaMapShader = nullptr;
 	}
 
 	//Release the Model object
@@ -145,7 +145,7 @@ bool Graphics::Render()
 	this->m_Model->Render(this->m_Direct3D->GetDeviceContext());
 
 	// Render the model using the LightMapShader
-	this->m_LightMapShader->Render(this->m_Direct3D->GetDeviceContext(), this->m_Model->GetIndexCount(), worldMatrix, viewMatrix, projectionMatrix, this->m_Model->GetTextureArray());
+	this->m_AlphaMapShader->Render(this->m_Direct3D->GetDeviceContext(), this->m_Model->GetIndexCount(), worldMatrix, viewMatrix, projectionMatrix, this->m_Model->GetTextureArray());
 
 	// Present the rendered scene to the screen
 	this->m_Direct3D->EndScene();
