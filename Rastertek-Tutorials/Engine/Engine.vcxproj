@@ -150,13 +150,17 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="Camera.h" />
-    <ClInclude Include="Cpu.h" />
     <ClInclude Include="Direct3D.h" />
     <ClInclude Include="Font.h" />
     <ClInclude Include="FontShader.h" />
-    <ClInclude Include="Fps.h" />
+    <ClInclude Include="Frustum.h" />
     <ClInclude Include="Graphics.h" />
     <ClInclude Include="Input.h" />
+    <ClInclude Include="Light.h" />
+    <ClInclude Include="LightShader.h" />
+    <ClInclude Include="Model.h" />
+    <ClInclude Include="ModelList.h" />
+    <ClInclude Include="Position.h" />
     <ClInclude Include="System.h" />
     <ClInclude Include="Text.h" />
     <ClInclude Include="Texture.h" />
@@ -164,14 +168,18 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Camera.cpp" />
-    <ClCompile Include="Cpu.cpp" />
     <ClCompile Include="Direct3D.cpp" />
     <ClCompile Include="Font.cpp" />
     <ClCompile Include="FontShader.cpp" />
-    <ClCompile Include="Fps.cpp" />
+    <ClCompile Include="Frustum.cpp" />
     <ClCompile Include="Graphics.cpp" />
     <ClCompile Include="Input.cpp" />
+    <ClCompile Include="Light.cpp" />
+    <ClCompile Include="LightShader.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="Model.cpp" />
+    <ClCompile Include="ModelList.cpp" />
+    <ClCompile Include="Position.cpp" />
     <ClCompile Include="System.cpp" />
     <ClCompile Include="Text.cpp" />
     <ClCompile Include="Texture.cpp" />
@@ -190,12 +198,26 @@
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Vertex</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
     </FxCompile>
+    <FxCompile Include="LightPixelShader.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
+    </FxCompile>
+    <FxCompile Include="LightVertexShader.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
+    </FxCompile>
   </ItemGroup>
   <ItemGroup>
     <Text Include="fontdata.txt" />
+    <Text Include="sphere.txt" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="font.dds" />
+    <Image Include="seafloor.dds" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

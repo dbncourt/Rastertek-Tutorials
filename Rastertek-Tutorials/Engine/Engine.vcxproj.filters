@@ -60,13 +60,25 @@
     <ClInclude Include="Texture.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Fps.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Cpu.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Timer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Frustum.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Light.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="LightShader.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Model.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ModelList.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Position.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -101,13 +113,25 @@
     <ClCompile Include="Texture.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Fps.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Cpu.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Timer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Frustum.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Light.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="LightShader.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Model.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ModelList.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Position.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -118,14 +142,26 @@
     <FxCompile Include="FontPixelShader.hlsl">
       <Filter>Resource Files\Shader\Pixel</Filter>
     </FxCompile>
+    <FxCompile Include="LightPixelShader.hlsl">
+      <Filter>Resource Files\Shader\Pixel</Filter>
+    </FxCompile>
+    <FxCompile Include="LightVertexShader.hlsl">
+      <Filter>Resource Files\Shader\Vertex</Filter>
+    </FxCompile>
   </ItemGroup>
   <ItemGroup>
     <Text Include="fontdata.txt">
       <Filter>Resource Files\Model</Filter>
     </Text>
+    <Text Include="sphere.txt">
+      <Filter>Resource Files\Model</Filter>
+    </Text>
   </ItemGroup>
   <ItemGroup>
     <Image Include="font.dds">
+      <Filter>Resource Files\Texture</Filter>
+    </Image>
+    <Image Include="seafloor.dds">
       <Filter>Resource Files\Texture</Filter>
     </Image>
   </ItemGroup>

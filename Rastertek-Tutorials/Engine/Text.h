@@ -40,8 +40,8 @@ private:
 	int m_screenHeight;
 	D3DXMATRIX m_baseViewMatrix;
 
-	SentenceType* m_sentence1;
-	SentenceType* m_sentence2;
+	SentenceType* m_sentence;
+
 public:
 	Text();
 	Text(const Text& other);
@@ -51,8 +51,7 @@ public:
 	void Shutdown();
 	bool Render(ID3D11DeviceContext* deviceContext, D3DXMATRIX worldMatrix, D3DXMATRIX orthoMatrix);
 
-	bool SetFps(int fps, ID3D11DeviceContext* deviceContext);
-	bool SetCpu(int cpu, ID3D11DeviceContext* deviceContext);
+	bool SetRenderCount(int renderCount, ID3D11DeviceContext* deviceContext);
 
 private:
 	bool InitializeSentence(SentenceType** sentence, int indexCount, ID3D11Device* device);

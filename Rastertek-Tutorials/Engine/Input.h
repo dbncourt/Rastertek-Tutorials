@@ -43,12 +43,15 @@ public:
 	Input(const Input& other);
 	~Input();
 
-	bool Initialize(HINSTANCE hinstance, HWND hwnd, int, int);
+	bool Initialize(HINSTANCE hinstance, HWND hwnd, int screenWidth, int screenHeight);
 	void Shutdown();
 	bool Frame();
 
 	bool IsEscapePressed();
-	void GetMouseLocation(int&, int&);
+	bool IsLeftArrowPressed();
+	bool IsRightArrowPressed();
+
+	void GetMouseLocation(int& mouseX, int& mouseY);
 
 private:
 	bool ReadKeyboard();

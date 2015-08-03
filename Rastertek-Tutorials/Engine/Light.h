@@ -1,40 +1,32 @@
 ////////////////////////////////////////////////////////////////////////////////
-// Filename: Fps.h
+// Filename: Light.h
 ////////////////////////////////////////////////////////////////////////////////
-#ifndef _FPS_H_
-#define _FPS_H_
-
-
-/////////////
-// LINKING //
-/////////////
-#pragma comment(lib, "winmm.lib")
-
+#ifndef _LIGHT_H_
+#define _LIGHT_H_
 
 //////////////
 // INCLUDES //
 //////////////
-#include <windows.h>
-#include <mmsystem.h>
+#include <d3dx10math.h>
 
 ////////////////////////////////////////////////////////////////////////////////
-// Class name: Fps
+// Class name: Light
 ////////////////////////////////////////////////////////////////////////////////
-class Fps
+class Light
 {
 private:
-	int m_fps;
-	int m_count;
-	ULONG m_startTime;
+	D3DXCOLOR m_diffuseColor;
+	D3DXVECTOR3 m_lightDirection;
 
 public:
-	Fps();
-	Fps(const Fps& other);
-	~Fps();
+	Light();
+	Light(const Light& other);
+	~Light();
 
-	void Initialize();
-	void Frame();
-	int GetFps();
+	void SetDiffuseColor(D3DXCOLOR diffuseColor);
+	D3DXCOLOR GetDiffuseColor();
+
+	void SetDirection(D3DXVECTOR3 lightDirection);
+	D3DXVECTOR3 GetDirection();
 };
-
 #endif
