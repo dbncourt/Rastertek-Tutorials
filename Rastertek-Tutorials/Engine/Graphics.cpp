@@ -9,7 +9,7 @@ Graphics::Graphics()
 	this->m_Direct3D = nullptr;
 	this->m_Camera = nullptr;
 	this->m_Model = nullptr;
-	this->m_TextureShader = nullptr;
+	this->m_MultiTextureShader = nullptr;
 }
 
 Graphics::Graphics(const Graphics& other)
@@ -57,25 +57,25 @@ bool Graphics::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 	}
 
 	//Initialize the Model object
-	result = this->m_Model->Initialize(this->m_Direct3D->GetDevice(), L"seafloor.dds");
+	result = this->m_Model->Initialize(this->m_Direct3D->GetDevice(), "squarex.txt", L"stone01.dds", L"dirt01.dds");
 	if (!result)
 	{
 		MessageBox(hwnd, L"Could not initialize the Model object", L"Error", MB_OK);
 		return false;
 	}
 
-	//Create the TextureShader object
-	this->m_TextureShader = new TextureShader();
-	if (!this->m_TextureShader)
+	//Create the MultiTextureShader object
+	this->m_MultiTextureShader = new MultiTextureShader();
+	if (!this->m_MultiTextureShader)
 	{
 		return false;
 	}
 
-	//Initialize the TextureShader object
-	result = this->m_TextureShader->Initialize(this->m_Direct3D->GetDevice(), hwnd);
+	//Initialize the MultiTextureShader object
+	result = this->m_MultiTextureShader->Initialize(this->m_Direct3D->GetDevice(), hwnd);
 	if (!result)
 	{
-		MessageBox(hwnd, L"Could not initialize the TextureShader object", L"Error", MB_OK);
+		MessageBox(hwnd, L"Could not initialize the MultiTextureShader object", L"Error", MB_OK);
 		return false;
 	}
 
@@ -84,12 +84,12 @@ bool Graphics::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 
 void Graphics::Shutdown()
 {
-	//Release the TextureShader object
-	if (this->m_TextureShader)
+	//Release the MultiTextureShader object
+	if (this->m_MultiTextureShader)
 	{
-		this->m_TextureShader->Shutdown();
-		delete this->m_TextureShader;
-		this->m_TextureShader = nullptr;
+		this->m_MultiTextureShader->Shutdown();
+		delete this->m_MultiTextureShader;
+		this->m_MultiTextureShader = nullptr;
 	}
 
 	//Release the Model object
@@ -118,22 +118,14 @@ void Graphics::Shutdown()
 
 bool Graphics::Frame()
 {
-	bool result;
-
-	//Render the graphics scene
-	result = Graphics::Render();
-	if (!result)
-	{
-		return false;
-	}
+	//Set the position of the Camera
+	this->m_Camera->SetPosition(D3DXVECTOR3(0.0f, 0.0f, -5.0f));
 
 	return true;
 }
 
 bool Graphics::Render()
 {
-	bool result;
-
 	D3DXMATRIX viewMatrix;
 	D3DXMATRIX projectionMatrix;
 	D3DXMATRIX worldMatrix;
@@ -153,11 +145,7 @@ bool Graphics::Render()
 	this->m_Model->Render(this->m_Direct3D->GetDeviceContext());
 
 	// Render the model using the color shader
-	result = this->m_TextureShader->Render(this->m_Direct3D->GetDeviceContext(), this->m_Model->GetIndexCount(), worldMatrix, viewMatrix, projectionMatrix, this->m_Model->GetTexture());
-	if (!result)
-	{
-		return false;
-	}
+	this->m_MultiTextureShader->Render(this->m_Direct3D->GetDeviceContext(), this->m_Model->GetIndexCount(), worldMatrix, viewMatrix, projectionMatrix, this->m_Model->GetTextureArray());
 
 	// Present the rendered scene to the screen
 	this->m_Direct3D->EndScene();

@@ -8,7 +8,8 @@ Model::Model()
 {
 	this->m_vertexBuffer = nullptr;
 	this->m_indexBuffer = nullptr;
-	this->m_Texture = nullptr;
+	this->m_TextureArray = nullptr;
+	this->m_model = nullptr;
 }
 
 Model::Model(const Model& other)
@@ -19,9 +20,16 @@ Model::~Model()
 {
 }
 
-bool Model::Initialize(ID3D11Device* device, WCHAR* textureFileName)
+bool Model::Initialize(ID3D11Device* device, char* modelFileName, WCHAR* baseTextureFilename, WCHAR* colorTextureFilename)
 {
 	bool result;
+
+	// Load in the model data
+	result = Model::LoadModel(modelFileName);
+	if (!result)
+	{
+		return false;
+	}
 
 	// Initialize the vertex and index buffers.
 	result = Model::InitializeBuffers(device);
@@ -31,7 +39,7 @@ bool Model::Initialize(ID3D11Device* device, WCHAR* textureFileName)
 	}
 
 	//Load the texture for this model
-	result = Model::LoadTexture(device, textureFileName);
+	result = Model::LoadTexture(device, baseTextureFilename, colorTextureFilename);
 	if (!result)
 	{
 		return false;
@@ -47,11 +55,14 @@ void Model::Shutdown()
 
 	// Shutdown the vertex and index buffers
 	Model::ShutdownBuffers();
+
+	//Release the model data
+	Model::ReleaseModel();
 }
 
-ID3D11ShaderResourceView* Model::GetTexture()
+ID3D11ShaderResourceView** Model::GetTextureArray()
 {
-	return this->m_Texture->GetTexture();
+	return this->m_TextureArray->GetTextureArray();
 }
 
 void Model::Render(ID3D11DeviceContext* deviceContext)
@@ -69,12 +80,6 @@ bool Model::InitializeBuffers(ID3D11Device* device)
 {
 	HRESULT result;
 
-	//Set the number of vertices in the vertex array
-	this->m_vertexCount = 3;
-
-	//Set the number of indices in the index array
-	this->m_indexCount = 3;
-
 	//Create the vertex array
 	VertexType* vertices = new VertexType[this->m_vertexCount];
 	if (!vertices)
@@ -89,20 +94,14 @@ bool Model::InitializeBuffers(ID3D11Device* device)
 		return false;
 	}
 
-	//Load the vertex array with data
-	vertices[0].position = D3DXVECTOR3(-1.0f, -1.0f, 0.0f); //Bottom left
-	vertices[0].texture = D3DXVECTOR2(0.0f, 1.0f);
+	// Load the vertex array and index array with data
+	for (UINT i = 0; i < this->m_vertexCount; i++)
+	{
+		vertices[i].position = this->m_model[i].position;
+		vertices[i].texture = this->m_model[i].texture;
 
-	vertices[1].position = D3DXVECTOR3(0.0f, 1.0f, 0.0f); //Top middle
-	vertices[1].texture = D3DXVECTOR2(0.5f, 0.0f);
-
-	vertices[2].position = D3DXVECTOR3(1.0f, -1.0f, 0.0f); //Bottom right
-	vertices[2].texture = D3DXVECTOR2(1.0f, 1.0f);
-
-	//Load the index array with data
-	indices[0] = 0;  // Bottom left.
-	indices[1] = 1;  // Top middle.
-	indices[2] = 2;  // Bottom right.
+		indices[i] = i;
+	}
 
 	D3D11_BUFFER_DESC vertexBufferDesc;
 	ZeroMemory(&vertexBufferDesc, sizeof(D3D11_BUFFER_DESC));
@@ -199,19 +198,19 @@ void Model::RenderBuffers(ID3D11DeviceContext* deviceContext)
 	deviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 }
 
-bool Model::LoadTexture(ID3D11Device* device, WCHAR* textureFileName)
+bool Model::LoadTexture(ID3D11Device* device, WCHAR* baseTextureFilename, WCHAR* colorTextureFilename)
 {
 	bool result;
 
-	//Create the texture object
-	this->m_Texture = new Texture();
-	if (!this->m_Texture)
+	//Create the TextureArray object
+	this->m_TextureArray = new TextureArray();
+	if (!this->m_TextureArray)
 	{
 		return false;
 	}
 
-	//Initialize the texture object
-	result = this->m_Texture->Initialize(device, textureFileName);
+	//Initialize the TextureArray object
+	result = this->m_TextureArray->Initialize(device, baseTextureFilename, colorTextureFilename);
 	if (!result)
 	{
 		return false;
@@ -222,12 +221,76 @@ bool Model::LoadTexture(ID3D11Device* device, WCHAR* textureFileName)
 
 void Model::ReleaseTexture()
 {
-	//Release the texture object
-	if (!this->m_Texture)
+	//Release the TextureArray object
+	if (!this->m_TextureArray)
 	{
-		this->m_Texture->Shutdown();
-		delete this->m_Texture;
-		this->m_Texture = nullptr;
+		this->m_TextureArray->Shutdown();
+		delete this->m_TextureArray;
+		this->m_TextureArray = nullptr;
 	}
 }
 
+bool Model::LoadModel(char* modelFileName)
+{
+	ifstream fIn;
+	char input;
+
+	//Open the model file
+	fIn.open(modelFileName);
+
+	// If it could not open the file then exit
+	if (fIn.fail())
+	{
+		return false;
+	}
+	//Read up to the value of vertex count
+	fIn.get(input);
+	while (input != ':')
+	{
+		fIn.get(input);
+	}
+
+	//Read in the vertex count
+	fIn >> this->m_vertexCount;
+
+	//Set the number of indices to be the same as the vertex count
+	this->m_indexCount = this->m_vertexCount;
+
+	//Create the model using the vertex count that was read in
+	this->m_model = new ModelType[this->m_vertexCount];
+	if (!this->m_model)
+	{
+		return false;
+	}
+
+	//Read up to the beginning of the data
+	fIn.get(input);
+	while (input != ':')
+	{
+		fIn.get(input);
+	}
+	fIn.get(input);
+	fIn.get(input);
+
+	//Read in the vertex data.
+	for (UINT i = 0; i < this->m_vertexCount; i++)
+	{
+		fIn >> this->m_model[i].position.x >> this->m_model[i].position.y >> this->m_model[i].position.z;
+		fIn >> this->m_model[i].texture.x >> this->m_model[i].texture.y;
+		fIn >> this->m_model[i].normal.x >> this->m_model[i].normal.y >> this->m_model[i].normal.z;
+	}
+
+	//Close the model file
+	fIn.close();
+
+	return true;
+}
+
+void Model::ReleaseModel()
+{
+	if (this->m_model)
+	{
+		delete[] this->m_model;
+		this->m_model = nullptr;
+	}
+}

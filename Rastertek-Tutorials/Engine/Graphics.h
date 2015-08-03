@@ -15,7 +15,7 @@
 #include "Direct3D.h"
 #include "Camera.h"
 #include "Model.h"
-#include "TextureShader.h"
+#include "MultiTextureShader.h"
 
 /////////////
 // GLOBALS //
@@ -35,7 +35,7 @@ private:
 	Direct3D* m_Direct3D;
 	Camera* m_Camera;
 	Model* m_Model;
-	TextureShader* m_TextureShader;
+	MultiTextureShader* m_MultiTextureShader;
 
 public:
 	Graphics();
@@ -45,8 +45,7 @@ public:
 	bool Initialize(int screenWidth, int screenHeight, HWND hwnd);
 	void Shutdown();
 	bool Frame();
-
-private:
 	bool Render();
+		
 };
 #endif

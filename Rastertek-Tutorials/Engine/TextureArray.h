@@ -1,8 +1,9 @@
 ////////////////////////////////////////////////////////////////////////////////
-// Filename: Texture.h
+// Filename: TextureArray.h
 ////////////////////////////////////////////////////////////////////////////////
-#ifndef _TEXTURE_H_
-#define _TEXTURE_H_
+#ifndef _TEXTUREARRAYCLASS_H_
+#define _TEXTUREARRAYCLASS_H_
+
 
 //////////////
 // INCLUDES //
@@ -10,22 +11,24 @@
 #include <d3d11.h>
 #include <d3dx11tex.h>
 
+
 ////////////////////////////////////////////////////////////////////////////////
-// Class name: Texture
+// Class name: TextureArray
 ////////////////////////////////////////////////////////////////////////////////
-class Texture
+class TextureArray
 {
 private:
-	ID3D11ShaderResourceView* m_texture;
+	ID3D11ShaderResourceView* m_textures[2];
 
 public:
-	Texture();
-	Texture(const Texture& other);
-	~Texture();
+	TextureArray();
+	TextureArray(const TextureArray& other);
+	~TextureArray();
 
-	bool Initialize(ID3D11Device* device, WCHAR* fileName);
+	bool Initialize(ID3D11Device* device, WCHAR* baseTextureFileName, WCHAR* colorTextureFileName);
 	void Shutdown();
 
-	ID3D11ShaderResourceView* GetTexture();
+	ID3D11ShaderResourceView** GetTextureArray();
 };
+
 #endif
