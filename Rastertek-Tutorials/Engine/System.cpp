@@ -32,14 +32,14 @@ bool System::Initialize()
 	//Initialize the windows API
 	System::InitializeWindows(screenWidth, screenHeight);
 
-	//Create the input object. This object will be used to handle reading the keyboard input from the user
+	//Create the Input object. This object will be used to handle reading the keyboard input from the user
 	this->m_Input = new Input();
 	if (!this->m_Input)
 	{
 		return false;
 	}
 
-	//Initialize the input object
+	//Initialize the Input object
 	result = this->m_Input->Initialize(this->m_hinstance, this->m_hwnd, screenWidth, screenHeight);
 	if (!result)
 	{
@@ -66,7 +66,7 @@ bool System::Initialize()
 
 void System::Shutdown()
 {
-	//Release the graphics object
+	//Release the Graphics object
 	if (this->m_Graphics)
 	{
 		this->m_Graphics->Shutdown();
@@ -74,7 +74,7 @@ void System::Shutdown()
 		this->m_Graphics = nullptr;
 	}
 
-	//Release the input object
+	//Release the Input object
 	if (this->m_Input)
 	{
 		this->m_Input->Shutdown();
