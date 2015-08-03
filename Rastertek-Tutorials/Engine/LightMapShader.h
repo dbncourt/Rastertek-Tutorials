@@ -1,8 +1,8 @@
 ////////////////////////////////////////////////////////////////////////////////
-// Filename: MultiTextureShader.h
+// Filename: LightMapShader.h
 ////////////////////////////////////////////////////////////////////////////////
-#ifndef _TEXTURESHADER_H_
-#define _TEXTURESHADER_H_
+#ifndef _LIGHTMAPSHADER_H_
+#define _LIGHTMAPSHADER_H_
 
 //////////////
 // INCLUDES //
@@ -14,9 +14,9 @@
 using namespace std;
 
 ////////////////////////////////////////////////////////////////////////////////
-// Class name: MultiTextureShader
+// Class name: LightMapShader
 ////////////////////////////////////////////////////////////////////////////////
-class MultiTextureShader
+class LightMapShader
 {
 
 private:
@@ -35,9 +35,9 @@ private:
 
 
 public:
-	MultiTextureShader();
-	MultiTextureShader(const MultiTextureShader& other);
-	~MultiTextureShader();
+	LightMapShader();
+	LightMapShader(const LightMapShader& other);
+	~LightMapShader();
 
 	bool Initialize(ID3D11Device* device, HWND hwnd);
 	void Shutdown();

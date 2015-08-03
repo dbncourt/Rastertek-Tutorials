@@ -154,7 +154,7 @@
     <ClInclude Include="Graphics.h" />
     <ClInclude Include="Input.h" />
     <ClInclude Include="Model.h" />
-    <ClInclude Include="MultiTextureShader.h" />
+    <ClInclude Include="LightMapShader.h" />
     <ClInclude Include="System.h" />
     <ClInclude Include="TextureArray.h" />
   </ItemGroup>
@@ -165,18 +165,18 @@
     <ClCompile Include="Input.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Model.cpp" />
-    <ClCompile Include="MultiTextureShader.cpp" />
+    <ClCompile Include="LightMapShader.cpp" />
     <ClCompile Include="System.cpp" />
     <ClCompile Include="TextureArray.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <FxCompile Include="MultiTexturePixelShader.hlsl">
+    <FxCompile Include="LightMapPixelShader.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Pixel</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
     </FxCompile>
-    <FxCompile Include="MultiTextureVertexShader.hlsl">
+    <FxCompile Include="LightMapVertexShader.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Vertex</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Vertex</ShaderType>
@@ -184,7 +184,7 @@
     </FxCompile>
   </ItemGroup>
   <ItemGroup>
-    <Image Include="dirt01.dds" />
+    <Image Include="light01.dds" />
     <Image Include="stone01.dds" />
   </ItemGroup>
   <ItemGroup>

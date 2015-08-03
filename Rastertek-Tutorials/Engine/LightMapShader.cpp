@@ -1,10 +1,10 @@
 ////////////////////////////////////////////////////////////////////////////////
-// Filename: MultiTextureShader.cpp
+// Filename: LightMapShader.cpp
 ////////////////////////////////////////////////////////////////////////////////
-#include "MultiTextureShader.h"
+#include "LightMapShader.h"
 
 
-MultiTextureShader::MultiTextureShader()
+LightMapShader::LightMapShader()
 {
 	this->m_vertexShader = nullptr;
 	this->m_pixelShader = nullptr;
@@ -13,20 +13,20 @@ MultiTextureShader::MultiTextureShader()
 	this->m_samplerState = nullptr;
 }
 
-MultiTextureShader::MultiTextureShader(const MultiTextureShader& other)
+LightMapShader::LightMapShader(const LightMapShader& other)
 {
 }
 
-MultiTextureShader::~MultiTextureShader()
+LightMapShader::~LightMapShader()
 {
 }
 
-bool MultiTextureShader::Initialize(ID3D11Device* device, HWND hwnd)
+bool LightMapShader::Initialize(ID3D11Device* device, HWND hwnd)
 {
 	bool result;
 
 	//Initialize the vertex and pixel shaders
-	result = MultiTextureShader::InitializeShader(device, hwnd, L"MultiTextureVertexShader.hlsl", L"MultiTexturePixelShader.hlsl");
+	result = LightMapShader::InitializeShader(device, hwnd, L"LightMapVertexShader.hlsl", L"LightMapPixelShader.hlsl");
 	if (!result)
 	{
 		return false;
@@ -34,30 +34,30 @@ bool MultiTextureShader::Initialize(ID3D11Device* device, HWND hwnd)
 	return true;
 }
 
-void MultiTextureShader::Shutdown()
+void LightMapShader::Shutdown()
 {
 	//Shutdown the vertex and pixel shaders as well as the related objects
-	MultiTextureShader::ShutdownShader();
+	LightMapShader::ShutdownShader();
 }
 
-bool MultiTextureShader::Render(ID3D11DeviceContext* deviceContext, int indexCount, D3DXMATRIX worldMatrix, D3DXMATRIX viewMatrix, D3DXMATRIX projectionMatrix, ID3D11ShaderResourceView** textureArray)
+bool LightMapShader::Render(ID3D11DeviceContext* deviceContext, int indexCount, D3DXMATRIX worldMatrix, D3DXMATRIX viewMatrix, D3DXMATRIX projectionMatrix, ID3D11ShaderResourceView** textureArray)
 {
 	bool result;
 
 	//Set the shader parameters that it will use for rendering
-	result = MultiTextureShader::SetShaderParameters(deviceContext, worldMatrix, viewMatrix, projectionMatrix, textureArray);
+	result = LightMapShader::SetShaderParameters(deviceContext, worldMatrix, viewMatrix, projectionMatrix, textureArray);
 	if (!result)
 	{
 		return false;
 	}
 
 	//Now render the prepared buffers with the shader
-	MultiTextureShader::RenderShader(deviceContext, indexCount);
+	LightMapShader::RenderShader(deviceContext, indexCount);
 
 	return true;
 }
 
-bool MultiTextureShader::InitializeShader(ID3D11Device* device, HWND hwnd, WCHAR* vertexShaderFileName, WCHAR* pixelShaderFileName)
+bool LightMapShader::InitializeShader(ID3D11Device* device, HWND hwnd, WCHAR* vertexShaderFileName, WCHAR* pixelShaderFileName)
 {
 	HRESULT result;
 
@@ -72,7 +72,7 @@ bool MultiTextureShader::InitializeShader(ID3D11Device* device, HWND hwnd, WCHAR
 		//If the shader failed to compile, it should have written something to the error message
 		if (errorMessage)
 		{
-			MultiTextureShader::OutputShaderErrorMessage(errorMessage, hwnd, vertexShaderFileName);
+			LightMapShader::OutputShaderErrorMessage(errorMessage, hwnd, vertexShaderFileName);
 		}
 		//If there was nothing in the error message then it simply could not find the shader file itself
 		else
@@ -89,7 +89,7 @@ bool MultiTextureShader::InitializeShader(ID3D11Device* device, HWND hwnd, WCHAR
 		//If the shader failed to compile it should have written something to the error message
 		if (errorMessage)
 		{
-			MultiTextureShader::OutputShaderErrorMessage(errorMessage, hwnd, pixelShaderFileName);
+			LightMapShader::OutputShaderErrorMessage(errorMessage, hwnd, pixelShaderFileName);
 		}
 		//If there was nothing in the error message then it simply could not find the file itself
 		else
@@ -197,7 +197,7 @@ bool MultiTextureShader::InitializeShader(ID3D11Device* device, HWND hwnd, WCHAR
 	return true;
 }
 
-void MultiTextureShader::ShutdownShader()
+void LightMapShader::ShutdownShader()
 {
 	//Release the SamplerState
 	if (this->m_samplerState)
@@ -235,7 +235,7 @@ void MultiTextureShader::ShutdownShader()
 	}
 }
 
-void MultiTextureShader::OutputShaderErrorMessage(ID3D10Blob* errorMessage, HWND hwnd, WCHAR* shaderFileName)
+void LightMapShader::OutputShaderErrorMessage(ID3D10Blob* errorMessage, HWND hwnd, WCHAR* shaderFileName)
 {
 	char* compileErrors;
 	ofstream fOut;
@@ -266,7 +266,7 @@ void MultiTextureShader::OutputShaderErrorMessage(ID3D10Blob* errorMessage, HWND
 	MessageBox(hwnd, L"Error compiling shader.  Check shader-error.txt for message.", shaderFileName, MB_OK);
 }
 
-bool MultiTextureShader::SetShaderParameters(ID3D11DeviceContext* deviceContext, D3DXMATRIX worldMatrix, D3DXMATRIX viewMatrix, D3DXMATRIX projectionMatrix, ID3D11ShaderResourceView** textureArray)
+bool LightMapShader::SetShaderParameters(ID3D11DeviceContext* deviceContext, D3DXMATRIX worldMatrix, D3DXMATRIX viewMatrix, D3DXMATRIX projectionMatrix, ID3D11ShaderResourceView** textureArray)
 {
 	HRESULT result;
 
@@ -305,7 +305,7 @@ bool MultiTextureShader::SetShaderParameters(ID3D11DeviceContext* deviceContext,
 	return true;
 }
 
-void MultiTextureShader::RenderShader(ID3D11DeviceContext* deviceContext, int indexCount)
+void LightMapShader::RenderShader(ID3D11DeviceContext* deviceContext, int indexCount)
 {
 	//Set the vertex input layout
 	deviceContext->IASetInputLayout(this->m_inputLayout);

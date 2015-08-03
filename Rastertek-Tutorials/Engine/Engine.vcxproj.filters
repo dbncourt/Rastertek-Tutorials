@@ -51,10 +51,10 @@
     <ClInclude Include="Model.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="MultiTextureShader.h">
+    <ClInclude Include="TextureArray.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="TextureArray.h">
+    <ClInclude Include="LightMapShader.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -80,26 +80,26 @@
     <ClCompile Include="Model.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="MultiTextureShader.cpp">
+    <ClCompile Include="TextureArray.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="TextureArray.cpp">
+    <ClCompile Include="LightMapShader.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <FxCompile Include="MultiTexturePixelShader.hlsl">
+    <FxCompile Include="LightMapPixelShader.hlsl">
       <Filter>Resource Files\Shader\Pixel</Filter>
     </FxCompile>
-    <FxCompile Include="MultiTextureVertexShader.hlsl">
+    <FxCompile Include="LightMapVertexShader.hlsl">
       <Filter>Resource Files\Shader\Vertex</Filter>
     </FxCompile>
   </ItemGroup>
   <ItemGroup>
-    <Image Include="dirt01.dds">
+    <Image Include="stone01.dds">
       <Filter>Resource Files\Texture</Filter>
     </Image>
-    <Image Include="stone01.dds">
+    <Image Include="light01.dds">
       <Filter>Resource Files\Texture</Filter>
     </Image>
   </ItemGroup>
