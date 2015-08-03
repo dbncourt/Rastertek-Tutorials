@@ -54,7 +54,10 @@
     <ClInclude Include="TextureArray.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="AlphaMapShader.h">
+    <ClInclude Include="BumpMapShader.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Light.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -83,31 +86,31 @@
     <ClCompile Include="TextureArray.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="AlphaMapShader.cpp">
+    <ClCompile Include="BumpMapShader.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Light.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <FxCompile Include="AlphaMapPixelShader.hlsl">
-      <Filter>Resource Files\Shader\Pixel</Filter>
-    </FxCompile>
-    <FxCompile Include="AlphaMapVertexShader.hlsl">
+    <FxCompile Include="BumpMapVertexShader.hlsl">
       <Filter>Resource Files\Shader\Vertex</Filter>
+    </FxCompile>
+    <FxCompile Include="BumpMapPixelShader.hlsl">
+      <Filter>Resource Files\Shader\Pixel</Filter>
     </FxCompile>
   </ItemGroup>
   <ItemGroup>
     <Image Include="stone01.dds">
       <Filter>Resource Files\Texture</Filter>
     </Image>
-    <Image Include="light01.dds">
-      <Filter>Resource Files\Texture</Filter>
-    </Image>
-    <Image Include="alpha01.dds">
+    <Image Include="bump01.dds">
       <Filter>Resource Files\Texture</Filter>
     </Image>
   </ItemGroup>
   <ItemGroup>
-    <Text Include="square.txt">
+    <Text Include="cube.txt">
       <Filter>Resource Files\Model</Filter>
     </Text>
   </ItemGroup>
