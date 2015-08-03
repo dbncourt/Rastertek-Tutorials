@@ -100,7 +100,7 @@ bool Model::InitializeBuffers(ID3D11Device* device)
 		vertices[i].position = this->m_model[i].position;
 		vertices[i].texture = this->m_model[i].texture;
 		vertices[i].normal = this->m_model[i].normal;
-		vertices[i].tanget = this->m_model[i].tangent;
+		vertices[i].tangent = this->m_model[i].tangent;
 		vertices[i].binormal = this->m_model[i].binormal;
 
 		indices[i] = i;
