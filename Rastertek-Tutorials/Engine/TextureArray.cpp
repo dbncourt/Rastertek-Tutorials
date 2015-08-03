@@ -8,6 +8,7 @@ TextureArray::TextureArray()
 {
 	this->m_textures[0] = nullptr;
 	this->m_textures[1] = nullptr;
+	this->m_textures[2] = nullptr;
 }
 
 TextureArray::TextureArray(const TextureArray& other)
