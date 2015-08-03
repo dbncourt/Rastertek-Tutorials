@@ -100,7 +100,7 @@ bool Model::InitializeBuffers(ID3D11Device* device)
 		vertices[i].position = this->m_model[i].position;
 		vertices[i].texture = this->m_model[i].texture;
 		vertices[i].normal = this->m_model[i].normal;
-		vertices[i].tanget = this->m_model[i].tanget;
+		vertices[i].tangent = this->m_model[i].tangent;
 		vertices[i].binormal = this->m_model[i].binormal;
 
 		indices[i] = i;
@@ -331,28 +331,28 @@ void Model::CalculateModelVectors()
 		index++;
 
 		//Calculate the tangent and binormal of that face
-		Model::CalculateTangetBinormal(vertex1, vertex2, vertex3, tangent, binormal);
+		Model::CalculateTangentBinormal(vertex1, vertex2, vertex3, tangent, binormal);
 
 		//Calculate the new normal using the tangent and binormal
 		Model::CalculateNormal(tangent, binormal, normal);
 
 		//Store the normal, tangent and binormal for this face back in the model structure
 		this->m_model[index - 1].normal = normal;
-		this->m_model[index - 1].tanget = tangent;
+		this->m_model[index - 1].tangent = tangent;
 		this->m_model[index - 1].binormal = binormal;
 
 		this->m_model[index - 2].normal = normal;
-		this->m_model[index - 2].tanget = tangent;
+		this->m_model[index - 2].tangent = tangent;
 		this->m_model[index - 2].binormal = binormal;
 
 		this->m_model[index - 3].normal = normal;
-		this->m_model[index - 3].tanget = tangent;
+		this->m_model[index - 3].tangent = tangent;
 		this->m_model[index - 3].binormal = binormal;
 	}
 
 }
 
-void Model::CalculateTangetBinormal(TempVertexType vertex1, TempVertexType vertex2, TempVertexType vertex3, D3DXVECTOR3& tangent, D3DXVECTOR3& binormal)
+void Model::CalculateTangentBinormal(TempVertexType vertex1, TempVertexType vertex2, TempVertexType vertex3, D3DXVECTOR3& tangent, D3DXVECTOR3& binormal)
 {
 
 	D3DXVECTOR3 vector1;
@@ -367,8 +367,11 @@ void Model::CalculateTangetBinormal(TempVertexType vertex1, TempVertexType verte
 	vector2 = vertex3.position - vertex1.position;
 
 	//Calculate the tu and tv texture space vector
-	tuVector = vertex2.texture - vertex1.texture;
-	tvVector = vertex3.texture - vertex1.texture;
+	tuVector.x = vertex2.texture.x - vertex1.texture.x;
+	tvVector.x = vertex2.texture.y - vertex1.texture.y;
+
+	tuVector.y = vertex3.texture.x - vertex1.texture.x;
+	tvVector.y = vertex3.texture.y - vertex1.texture.y;
 
 	//Calculate the denominator of the tangent/binormal equation
 	denominator = 1.0f / ((tuVector.x * tvVector.y) - (tuVector.y * tvVector.x));

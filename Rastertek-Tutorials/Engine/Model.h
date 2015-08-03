@@ -29,7 +29,7 @@ private:
 		D3DXVECTOR3 position;
 		D3DXVECTOR2 texture;
 		D3DXVECTOR3 normal;
-		D3DXVECTOR3 tanget;
+		D3DXVECTOR3 tangent;
 		D3DXVECTOR3 binormal;
 	};
 
@@ -38,7 +38,7 @@ private:
 		D3DXVECTOR3 position;
 		D3DXVECTOR2 texture;
 		D3DXVECTOR3 normal;
-		D3DXVECTOR3 tanget;
+		D3DXVECTOR3 tangent;
 		D3DXVECTOR3 binormal;
 	};
 
@@ -80,7 +80,7 @@ private:
 	void ReleaseModel();
 
 	void CalculateModelVectors();
-	void CalculateTangetBinormal(TempVertexType vertex1, TempVertexType vertex2, TempVertexType vertex3, D3DXVECTOR3& tangent, D3DXVECTOR3& binormal);
+	void CalculateTangentBinormal(TempVertexType vertex1, TempVertexType vertex2, TempVertexType vertex3, D3DXVECTOR3& tangent, D3DXVECTOR3& binormal);
 	void CalculateNormal(D3DXVECTOR3 tangent, D3DXVECTOR3 binormal, D3DXVECTOR3& normal);
 };
 #endif
