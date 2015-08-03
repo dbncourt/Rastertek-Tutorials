@@ -155,7 +155,7 @@
     <ClInclude Include="Input.h" />
     <ClInclude Include="Light.h" />
     <ClInclude Include="Model.h" />
-    <ClInclude Include="BumpMapShader.h" />
+    <ClInclude Include="SpecMapShader.h" />
     <ClInclude Include="System.h" />
     <ClInclude Include="TextureArray.h" />
   </ItemGroup>
@@ -167,18 +167,18 @@
     <ClCompile Include="Light.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Model.cpp" />
-    <ClCompile Include="BumpMapShader.cpp" />
+    <ClCompile Include="SpecMapShader.cpp" />
     <ClCompile Include="System.cpp" />
     <ClCompile Include="TextureArray.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <FxCompile Include="BumpMapPixelShader.hlsl">
+    <FxCompile Include="SpecMapPixelShader.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Pixel</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
     </FxCompile>
-    <FxCompile Include="BumpMapVertexShader.hlsl">
+    <FxCompile Include="SpecMapVertexShader.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Vertex</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Vertex</ShaderType>
@@ -186,8 +186,9 @@
     </FxCompile>
   </ItemGroup>
   <ItemGroup>
-    <Image Include="bump01.dds" />
-    <Image Include="stone01.dds" />
+    <Image Include="bump02.dds" />
+    <Image Include="spec02.dds" />
+    <Image Include="stone02.dds" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="cube.txt" />

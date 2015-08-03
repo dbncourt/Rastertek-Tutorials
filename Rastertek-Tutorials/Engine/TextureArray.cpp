@@ -8,6 +8,7 @@ TextureArray::TextureArray()
 {
 	this->m_textures[0] = nullptr;
 	this->m_textures[1] = nullptr;
+	this->m_textures[2] = nullptr;
 }
 
 TextureArray::TextureArray(const TextureArray& other)
@@ -19,7 +20,7 @@ TextureArray::~TextureArray()
 {
 }
 
-bool TextureArray::Initialize(ID3D11Device* device, WCHAR* baseTextureFileName, WCHAR* bumpMapTextureFileName)
+bool TextureArray::Initialize(ID3D11Device* device, WCHAR* baseTextureFileName, WCHAR* bumpMapTextureFileName, WCHAR* specularMapTextureFileName)
 {
 	HRESULT result;
 
@@ -32,6 +33,13 @@ bool TextureArray::Initialize(ID3D11Device* device, WCHAR* baseTextureFileName, 
 
 	//Load the second texture in
 	result = D3DX11CreateShaderResourceViewFromFile(device, bumpMapTextureFileName, nullptr, nullptr, &this->m_textures[1], nullptr);
+	if (FAILED(result))
+	{
+		return false;
+	}
+
+	//Load the third texture in
+	result = D3DX11CreateShaderResourceViewFromFile(device, specularMapTextureFileName, nullptr, nullptr, &this->m_textures[2], nullptr);
 	if (FAILED(result))
 	{
 		return false;
@@ -55,6 +63,12 @@ void TextureArray::Shutdown()
 		{
 			this->m_textures[1]->Release();
 			this->m_textures[1] = nullptr;
+		}
+
+		if (this->m_textures[2])
+		{
+			this->m_textures[2]->Release();
+			this->m_textures[2] = nullptr;
 		}
 	}
 }

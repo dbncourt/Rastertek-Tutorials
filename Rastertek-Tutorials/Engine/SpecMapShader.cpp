@@ -1,10 +1,10 @@
 ////////////////////////////////////////////////////////////////////////////////
-// Filename: BumpMapShader.cpp
+// Filename: SpecMapShader.cpp
 ////////////////////////////////////////////////////////////////////////////////
-#include "BumpMapShader.h"
+#include "SpecMapShader.h"
 
 
-BumpMapShader::BumpMapShader()
+SpecMapShader::SpecMapShader()
 {
 	this->m_vertexShader = nullptr;
 	this->m_pixelShader = nullptr;
@@ -12,23 +12,24 @@ BumpMapShader::BumpMapShader()
 	this->m_samplerState = nullptr;
 	this->m_matrixBuffer = nullptr;
 	this->m_lightBuffer = nullptr;
+	this->m_cameraBuffer = nullptr;
 }
 
-BumpMapShader::BumpMapShader(const BumpMapShader& other)
+SpecMapShader::SpecMapShader(const SpecMapShader& other)
 {
 }
 
 
-BumpMapShader::~BumpMapShader()
+SpecMapShader::~SpecMapShader()
 {
 }
 
-bool BumpMapShader::Initialize(ID3D11Device* device, HWND hwnd)
+bool SpecMapShader::Initialize(ID3D11Device* device, HWND hwnd)
 {
 	bool result;
 
-	//Initialize the vertex and pixel shader
-	result = InitializeShader(device, hwnd, L"BumpMapVertexShader.hlsl", L"BumpMapPixelShader.hlsl");
+	//Initialize the vertex pixel shaders
+	result = SpecMapShader::InitializeShader(device, hwnd, L"SpecMapVertexShader.hlsl", L"SpecMapPixelShader.hlsl");
 	if (!result)
 	{
 		return false;
@@ -37,44 +38,45 @@ bool BumpMapShader::Initialize(ID3D11Device* device, HWND hwnd)
 	return true;
 }
 
-void BumpMapShader::Shutdown()
+void SpecMapShader::Shutdown()
 {
-	//Shutdown the vertex and pixel shaders as well as the related objects
-	BumpMapShader::ShutdownShaders();
+	// Shutdown the vertex and pixel shaders as well as the related objects.
+	SpecMapShader::ShutdownShader();
 }
 
-bool BumpMapShader::Render(ID3D11DeviceContext* deviceContext, int indexCount, D3DXMATRIX worldMatrix, D3DXMATRIX viewMatrix, D3DXMATRIX projectionMatrix, ID3D11ShaderResourceView** textureArray, D3DXVECTOR3 lightDireciton, D3DXCOLOR diffuseColor)
+bool SpecMapShader::Render(ID3D11DeviceContext* deviceContext, int indexCount, D3DXMATRIX worldMatrix, D3DXMATRIX viewMatrix, D3DXMATRIX projectionMatrix, ID3D11ShaderResourceView** textureArray, D3DXVECTOR3 lightDirection, D3DXCOLOR diffuseColor, D3DXVECTOR3 cameraPosition, D3DXCOLOR specularColor, float specularPower)
 {
 	bool result;
 
-	//Set the shader parameters that it will for rendering
-	result = BumpMapShader::SetShaderParameters(deviceContext, indexCount, worldMatrix, viewMatrix, projectionMatrix, textureArray, lightDireciton, diffuseColor);
+	// Set the shader parameters that it will use for rendering.
+	result = SpecMapShader::SetShaderParameters(deviceContext, worldMatrix, viewMatrix, projectionMatrix, textureArray, lightDirection, diffuseColor, cameraPosition, specularColor, specularPower);
 	if (!result)
 	{
 		return false;
 	}
 
-	//Now render the prepared buffers with the shader
-	BumpMapShader::RenderShader(deviceContext, indexCount);
+	// Now render the prepared buffers with the shader.
+	SpecMapShader::RenderShader(deviceContext, indexCount);
 
 	return true;
 }
 
-bool BumpMapShader::InitializeShader(ID3D11Device* device, HWND hwnd, WCHAR* vsFileName, WCHAR* psFileName)
+bool SpecMapShader::InitializeShader(ID3D11Device* device, HWND hwnd, WCHAR* vsFileName, WCHAR* psFileName)
 {
+
 	HRESULT result;
 
 	ID3D10Blob* errorMessage = nullptr;
 	ID3D10Blob* vertexShaderBuffer = nullptr;
 	ID3D10Blob* pixelShaderBuffer = nullptr;
 
-	//Compile the vertex shader code
+	// Compile the vertex shader code.
 	result = D3DX11CompileFromFile(vsFileName, nullptr, nullptr, "main", "vs_5_0", D3D10_SHADER_ENABLE_STRICTNESS, 0, nullptr, &vertexShaderBuffer, &errorMessage, nullptr);
 	if (FAILED(result))
 	{
 		if (errorMessage)
 		{
-			BumpMapShader::OutputShaderErrorMessage(errorMessage, hwnd, vsFileName);
+			SpecMapShader::OutputShaderErrorMessage(errorMessage, hwnd, vsFileName);
 		}
 		else
 		{
@@ -83,13 +85,13 @@ bool BumpMapShader::InitializeShader(ID3D11Device* device, HWND hwnd, WCHAR* vsF
 		return false;
 	}
 
-	//Compile the pixel shader code
+	// Compile the pixel shader code.
 	result = D3DX11CompileFromFile(psFileName, nullptr, nullptr, "main", "ps_5_0", D3D10_SHADER_ENABLE_STRICTNESS, 0, nullptr, &pixelShaderBuffer, &errorMessage, nullptr);
 	if (FAILED(result))
 	{
 		if (errorMessage)
 		{
-			BumpMapShader::OutputShaderErrorMessage(errorMessage, hwnd, psFileName);
+			SpecMapShader::OutputShaderErrorMessage(errorMessage, hwnd, psFileName);
 		}
 		else
 		{
@@ -98,14 +100,14 @@ bool BumpMapShader::InitializeShader(ID3D11Device* device, HWND hwnd, WCHAR* vsF
 		return false;
 	}
 
-	//Create the vertex shader from the buffer
+	// Create the vertex shader from the buffer.
 	result = device->CreateVertexShader(vertexShaderBuffer->GetBufferPointer(), vertexShaderBuffer->GetBufferSize(), nullptr, &this->m_vertexShader);
 	if (FAILED(result))
 	{
 		return false;
 	}
 
-	//Create the pixel shader from the buffer
+	// Create the vertex shader from the buffer.
 	result = device->CreatePixelShader(pixelShaderBuffer->GetBufferPointer(), pixelShaderBuffer->GetBufferSize(), nullptr, &this->m_pixelShader);
 	if (FAILED(result))
 	{
@@ -192,6 +194,24 @@ bool BumpMapShader::InitializeShader(ID3D11Device* device, HWND hwnd, WCHAR* vsF
 		return false;
 	}
 
+	D3D11_BUFFER_DESC cameraBufferDesc;
+	ZeroMemory(&cameraBufferDesc, sizeof(D3D11_BUFFER_DESC));
+
+	//Setup the description of the camera dynamic constant buffer that is in the vertex shader
+	cameraBufferDesc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
+	cameraBufferDesc.ByteWidth = sizeof(CameraBufferType);
+	cameraBufferDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
+	cameraBufferDesc.MiscFlags = 0;
+	cameraBufferDesc.StructureByteStride = 0;
+	cameraBufferDesc.Usage = D3D11_USAGE_DYNAMIC;
+
+	//Create the camera constant buffer pointer so we can access the vertex shader constant buffer from within this class
+	result = device->CreateBuffer(&cameraBufferDesc, nullptr, &this->m_cameraBuffer);
+	if (FAILED(result))
+	{
+		return false;
+	}
+
 	D3D11_BUFFER_DESC lightBufferDesc;
 	ZeroMemory(&lightBufferDesc, sizeof(D3D11_BUFFER_DESC));
 
@@ -237,8 +257,15 @@ bool BumpMapShader::InitializeShader(ID3D11Device* device, HWND hwnd, WCHAR* vsF
 	return true;
 }
 
-void BumpMapShader::ShutdownShaders()
+void SpecMapShader::ShutdownShader()
 {
+	//Release the Camera Constant buffer
+	if (this->m_cameraBuffer)
+	{
+		this->m_cameraBuffer->Release();
+		this->m_cameraBuffer = nullptr;
+	}
+
 	//Release the Light Constant buffer
 	if (this->m_lightBuffer)
 	{
@@ -282,7 +309,7 @@ void BumpMapShader::ShutdownShaders()
 	}
 }
 
-void BumpMapShader::OutputShaderErrorMessage(ID3D10Blob* errorMessage, HWND hwnd, WCHAR* shaderFileName)
+void SpecMapShader::OutputShaderErrorMessage(ID3D10Blob* errorMessage, HWND hwnd, WCHAR* shaderFileName)
 {
 	char* compileErrors;
 	ofstream fOut;
@@ -313,11 +340,11 @@ void BumpMapShader::OutputShaderErrorMessage(ID3D10Blob* errorMessage, HWND hwnd
 	MessageBox(hwnd, L"Error compiling shader.  Check shader-error.txt for message.", shaderFileName, MB_OK);
 }
 
-bool BumpMapShader::SetShaderParameters(ID3D11DeviceContext* deviceContext, int indexCount, D3DXMATRIX worldMatrix, D3DXMATRIX viewMatrix, D3DXMATRIX projectionMatrix, ID3D11ShaderResourceView** textureArray, D3DXVECTOR3 lightDireciton, D3DXCOLOR diffuseColor)
+bool SpecMapShader::SetShaderParameters(ID3D11DeviceContext* deviceContext, D3DXMATRIX worldMatrix, D3DXMATRIX viewMatrix, D3DXMATRIX projectionMatrix, ID3D11ShaderResourceView** textureArray, D3DXVECTOR3 lightDirection, D3DXCOLOR diffuseColor, D3DXVECTOR3 cameraPosition, D3DXCOLOR specularColor, float specularPower)
 {
 	HRESULT result;
 
-	//Transpose the matrices to prepare them for the shader
+	// Transpose the matrices to prepare them for the shader.
 	D3DXMatrixTranspose(&worldMatrix, &worldMatrix);
 	D3DXMatrixTranspose(&viewMatrix, &viewMatrix);
 	D3DXMatrixTranspose(&projectionMatrix, &projectionMatrix);
@@ -325,69 +352,91 @@ bool BumpMapShader::SetShaderParameters(ID3D11DeviceContext* deviceContext, int 
 	D3D11_MAPPED_SUBRESOURCE mappedSubresource;
 	MatrixBufferType* matrixDataPtr;
 
-	//Lock the matrix constant buffer so it can be written to
+	// Lock the matrix constant buffer so it can be written to.
 	result = deviceContext->Map(this->m_matrixBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedSubresource);
 	if (FAILED(result))
 	{
 		return false;
 	}
 
-	//Get a pointer to the data in the constant buffer
+	// Get a pointer to the data in the constant buffer.
 	matrixDataPtr = (MatrixBufferType*)mappedSubresource.pData;
 
-	//Copy the matrices into the constant buffer
+	// Copy the matrices into the constant buffer.
 	matrixDataPtr->worldMatrix = worldMatrix;
 	matrixDataPtr->viewMatrix = viewMatrix;
 	matrixDataPtr->projectionMatrix = projectionMatrix;
 
-	//Unlock the matrix constant buffer
+	// Unlock the matrix constant buffer.
 	deviceContext->Unmap(this->m_matrixBuffer, 0);
 
-	LightBufferType* lightDataPrt;
+	CameraBufferType* cameraDataPtr;
 
-	//Lock the light constant buffer so it can be written to
+	// Lock the light constant buffer so it can be written to.
+	result = deviceContext->Map(this->m_cameraBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedSubresource);
+	if (FAILED(result))
+	{
+		return false;
+	}
+
+	// Get a pointer to the data in the constant buffer.
+	cameraDataPtr = (CameraBufferType*)mappedSubresource.pData;
+
+	// Copy the lighting variables into the constant buffer.
+	cameraDataPtr->cameraPosition = cameraPosition;
+	cameraDataPtr->padding = 0.0f;
+
+	// Unlock the constant buffer.
+	deviceContext->Unmap(this->m_cameraBuffer, 0);
+
+	LightBufferType* lightDataPtr;
+
+	// Lock the light constant buffer so it can be written to.
 	result = deviceContext->Map(this->m_lightBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedSubresource);
 	if (FAILED(result))
 	{
 		return false;
 	}
 
-	//Get a pointer to the data in the constant buffer
-	lightDataPrt = (LightBufferType*)mappedSubresource.pData;
+	// Get a pointer to the data in the constant buffer.
+	lightDataPtr = (LightBufferType*)mappedSubresource.pData;
 
-	//Copy the lighting variables into the constant buffer
-	lightDataPrt->diffuseColor = diffuseColor;
-	lightDataPrt->lightDirection = lightDireciton;
-	lightDataPrt->padding = 0.0f;
+	// Copy the lighting variables into the constant buffer.
+	lightDataPtr->diffuseColor = diffuseColor;
+	lightDataPtr->lightDirection = lightDirection;
+	lightDataPtr->specularColor = specularColor;
+	lightDataPtr->specularPower = specularPower;
 
-	//Unlock the light constant buffer
+	// Unlock the constant buffer.
 	deviceContext->Unmap(this->m_lightBuffer, 0);
 
-	//Now set the matrix constant buffer in the vertex shader with the updated values
+	// Now set the matrix constant buffer in the vertex shader with the updated values.
 	deviceContext->VSSetConstantBuffers(0, 1, &this->m_matrixBuffer);
 
-	//Now set the light constant buffer in the pixel shader with the updated values
+	// Now set the matrix constant buffer in the vertex shader with the updated values.
+	deviceContext->VSSetConstantBuffers(1, 1, &this->m_cameraBuffer);
+
+	// Finally set the light constant buffer in the pixel shader with the updated values.
 	deviceContext->PSSetConstantBuffers(0, 1, &this->m_lightBuffer);
 
-	//Set shader texture array resource in the pixel shader.
-	deviceContext->PSSetShaderResources(0, 2, textureArray);
+	// Set shader texture array resource in the pixel shader.
+	deviceContext->PSSetShaderResources(0, 3, textureArray);
 
 	return true;
 }
 
-void BumpMapShader::RenderShader(ID3D11DeviceContext* deviceContext, int indexCount)
+void SpecMapShader::RenderShader(ID3D11DeviceContext* deviceContext, int indexCount)
 {
-
-	//Set the vertex input layout
+	// Set the vertex input layout.
 	deviceContext->IASetInputLayout(this->m_inputLayout);
 
-	//Set the vertex and pixel shaders that will be used to render this model
+	// Set the vertex and pixel shaders that will be used to render this model.
 	deviceContext->VSSetShader(this->m_vertexShader, nullptr, 0);
 	deviceContext->PSSetShader(this->m_pixelShader, nullptr, 0);
 
-	//Set the sampler state in the pixel shader
+	// Set the sampler state in the pixel shader.
 	deviceContext->PSSetSamplers(0, 1, &this->m_samplerState);
 
-	//Render the model
+	// Render the model.
 	deviceContext->DrawIndexed(indexCount, 0, 0);
 }
