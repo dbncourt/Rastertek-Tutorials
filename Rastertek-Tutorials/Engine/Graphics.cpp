@@ -72,13 +72,6 @@ bool Graphics::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 		return false;
 	}
 
-	//Create the BumpMapShader object
-	this->m_BumpMapShader = new BumpMapShader();
-	if (!this->m_BumpMapShader)
-	{
-		return false;
-	}
-
 	//Initialize the BumpMapShader object
 	result = this->m_BumpMapShader->Initialize(this->m_Direct3D->GetDevice(), hwnd);
 	if (!result)
@@ -184,7 +177,7 @@ bool Graphics::Render()
 	// Put the model vertex and index buffers on the graphics pipeline to prepare them for drawing
 	this->m_Model->Render(this->m_Direct3D->GetDeviceContext());
 
-	// Render the model using the LightMapShader
+	// Render the model using the BumpMapShader
 	this->m_BumpMapShader->Render(this->m_Direct3D->GetDeviceContext(), this->m_Model->GetIndexCount(), worldMatrix, viewMatrix, projectionMatrix, this->m_Model->GetTextureArray(), this->m_Light->GetDirection(), this->m_Light->GetDiffuseColor());
 
 	// Present the rendered scene to the screen
