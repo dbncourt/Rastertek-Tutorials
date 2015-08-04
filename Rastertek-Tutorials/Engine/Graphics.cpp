@@ -255,7 +255,7 @@ bool Graphics::Render()
 	}
 
 	// Render the debug window using the texture shader.
-	result = this->m_TextureShader->Render(this->m_Direct3D->GetDeviceContext(), this->m_DebugWindow->GetIndexCount(), worldMatrix, viewMatrix, orthoMatrix, this->m_RenderTexture->GetShaderResouceView());
+	result = this->m_TextureShader->Render(this->m_Direct3D->GetDeviceContext(), this->m_DebugWindow->GetIndexCount(), worldMatrix, viewMatrix, orthoMatrix, this->m_RenderTexture->GetShaderResourceView());
 	if (!result)
 	{
 		return false;
