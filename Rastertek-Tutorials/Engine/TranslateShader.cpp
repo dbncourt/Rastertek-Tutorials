@@ -1,63 +1,55 @@
 ////////////////////////////////////////////////////////////////////////////////
-// Filename: ClipPlaneShader.cpp
+// Filename: TranslateShader.cpp
 ////////////////////////////////////////////////////////////////////////////////
-#include "ClipPlaneShader.h"
+#include "TranslateShader.h"
 
-ClipPlaneShader::ClipPlaneShader()
+TranslateShader::TranslateShader()
 {
 	this->m_vertexShader = nullptr;
 	this->m_pixelShader = nullptr;
 	this->m_layout = nullptr;
 	this->m_sampleState = nullptr;
 	this->m_matrixBuffer = nullptr;
-	this->m_clipPlaneBuffer = nullptr;
+	this->m_translationBuffer = nullptr;
 }
 
-ClipPlaneShader::ClipPlaneShader(const ClipPlaneShader& other)
+TranslateShader::TranslateShader(const TranslateShader& other)
 {
 }
 
-ClipPlaneShader::~ClipPlaneShader()
+TranslateShader::~TranslateShader()
 {
 }
 
-bool ClipPlaneShader::Initialize(ID3D11Device* device, HWND hwnd)
+bool TranslateShader::Initialize(ID3D11Device* device, HWND hwnd)
 {
-	bool result;
-
 	//Initialize the vertex and pixel shaders
-	result = ClipPlaneShader::InitializeShader(device, hwnd, L"ClipPlaneVertexShader.hlsl", L"ClipPlanePixelShader.hlsl");
-	if (!result)
-	{
-		return false;
-	}
-	return true;
+	return TranslateShader::InitializeShader(device, hwnd, L"TranslateVertexShader.hlsl", L"TranslatePixelShader.hlsl");
 }
 
-void ClipPlaneShader::Shutdown()
+void TranslateShader::Shutdown()
 {
 	//Shutdown the vertex and pixel shaders as well as the related objects
-	ClipPlaneShader::ShutdownShader();
+	TranslateShader::ShutdownShader();
 }
 
-bool ClipPlaneShader::Render(ID3D11DeviceContext* deviceContext, int indexCount, D3DXMATRIX worldMatrix, D3DXMATRIX viewMatrix, D3DXMATRIX projectionMatrix, ID3D11ShaderResourceView* texture, D3DXVECTOR4 clipPlane)
+bool TranslateShader::Render(ID3D11DeviceContext* deviceContext, int indexCount, D3DXMATRIX worldMatrix, D3DXMATRIX viewMatrix, D3DXMATRIX projectionMatrix, ID3D11ShaderResourceView* texture, float translation)
 {
 	bool result;
-
 	//Set the shader parameters that it will use for rendering
-	result = ClipPlaneShader::SetShaderParameters(deviceContext, worldMatrix, viewMatrix, projectionMatrix, texture, clipPlane);
+	result = TranslateShader::SetShaderParameters(deviceContext, worldMatrix, viewMatrix, projectionMatrix, texture, translation);
 	if (!result)
 	{
 		return false;
 	}
 
 	//Now render the prepared buffer with the shader
-	ClipPlaneShader::RenderShader(deviceContext, indexCount);
+	TranslateShader::RenderShader(deviceContext, indexCount);
 
 	return true;
 }
 
-bool ClipPlaneShader::InitializeShader(ID3D11Device* device, HWND hwnd, WCHAR* vertexShaderFileName, WCHAR* pixelShaderFileName)
+bool TranslateShader::InitializeShader(ID3D11Device* device, HWND hwnd, WCHAR* vertexShaderFileName, WCHAR* pixelShaderFileName)
 {
 	HRESULT result;
 
@@ -72,7 +64,7 @@ bool ClipPlaneShader::InitializeShader(ID3D11Device* device, HWND hwnd, WCHAR* v
 		//If the shader failed to compile, it should have written something to the error message
 		if (errorMessage)
 		{
-			ClipPlaneShader::OutputShaderErrorMessage(errorMessage, hwnd, vertexShaderFileName);
+			TranslateShader::OutputShaderErrorMessage(errorMessage, hwnd, vertexShaderFileName);
 		}
 		//If there was nothing in the error message then it simply could not find the shader file itself
 		else
@@ -89,7 +81,7 @@ bool ClipPlaneShader::InitializeShader(ID3D11Device* device, HWND hwnd, WCHAR* v
 		//If the shader failed to compile it should have written something to the error message
 		if (errorMessage)
 		{
-			ClipPlaneShader::OutputShaderErrorMessage(errorMessage, hwnd, pixelShaderFileName);
+			TranslateShader::OutputShaderErrorMessage(errorMessage, hwnd, pixelShaderFileName);
 		}
 		//If there was nothing in the error message then it simply could not find the file itself
 		else
@@ -114,7 +106,7 @@ bool ClipPlaneShader::InitializeShader(ID3D11Device* device, HWND hwnd, WCHAR* v
 	}
 
 	D3D11_INPUT_ELEMENT_DESC polygonLayout[2];
-	ZeroMemory(&polygonLayout, sizeof(polygonLayout));
+	ZeroMemory(polygonLayout, sizeof(polygonLayout));
 
 	//Create the vertex input layout description
 	//This setup needs to match the VertexType structure in the ModelClass and in the shader
@@ -155,12 +147,12 @@ bool ClipPlaneShader::InitializeShader(ID3D11Device* device, HWND hwnd, WCHAR* v
 	ZeroMemory(&matrixBufferDesc, sizeof(D3D11_BUFFER_DESC));
 
 	//Setup the description of the dynamic matrix constant buffer that is in the vertex shader
-	matrixBufferDesc.Usage = D3D11_USAGE_DYNAMIC;
-	matrixBufferDesc.ByteWidth = sizeof(MatrixBufferType);
 	matrixBufferDesc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
+	matrixBufferDesc.ByteWidth = sizeof(MatrixBufferType);
 	matrixBufferDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
 	matrixBufferDesc.MiscFlags = 0;
 	matrixBufferDesc.StructureByteStride = 0;
+	matrixBufferDesc.Usage = D3D11_USAGE_DYNAMIC;
 
 	//Create the constant buffer pointer so we can access the vertex shader constant buffer from withing this class
 	result = device->CreateBuffer(&matrixBufferDesc, nullptr, &this->m_matrixBuffer);
@@ -169,19 +161,19 @@ bool ClipPlaneShader::InitializeShader(ID3D11Device* device, HWND hwnd, WCHAR* v
 		return false;
 	}
 
-	D3D11_BUFFER_DESC clipPlaneBufferDesc;
-	ZeroMemory(&clipPlaneBufferDesc, sizeof(D3D11_BUFFER_DESC));
+	D3D11_BUFFER_DESC translationBufferDesc;
+	ZeroMemory(&translationBufferDesc, sizeof(D3D11_BUFFER_DESC));
 
 	//Setup the description of the dynamic matrix constant buffer that is in the vertex shader
-	clipPlaneBufferDesc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
-	clipPlaneBufferDesc.ByteWidth = sizeof(ClipPlaneBufferType);
-	clipPlaneBufferDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
-	clipPlaneBufferDesc.MiscFlags = 0;
-	clipPlaneBufferDesc.StructureByteStride = 0;
-	clipPlaneBufferDesc.Usage = D3D11_USAGE_DYNAMIC;
+	translationBufferDesc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
+	translationBufferDesc.ByteWidth = sizeof(TranslateBufferType);
+	translationBufferDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
+	translationBufferDesc.MiscFlags = 0;
+	translationBufferDesc.StructureByteStride = 0;
+	translationBufferDesc.Usage = D3D11_USAGE_DYNAMIC;
 
 	//Create the constant buffer pointer so we can access the vertex shader constant buffer from withing this class
-	result = device->CreateBuffer(&clipPlaneBufferDesc, nullptr, &this->m_clipPlaneBuffer);
+	result = device->CreateBuffer(&translationBufferDesc, nullptr, &this->m_translationBuffer);
 	if (FAILED(result))
 	{
 		return false;
@@ -215,7 +207,7 @@ bool ClipPlaneShader::InitializeShader(ID3D11Device* device, HWND hwnd, WCHAR* v
 	return true;
 }
 
-void ClipPlaneShader::ShutdownShader()
+void TranslateShader::ShutdownShader()
 {
 
 	//Release the SamplerState
@@ -225,11 +217,11 @@ void ClipPlaneShader::ShutdownShader()
 		this->m_sampleState = nullptr;
 	}
 
-	//Release the ClipPlane Constant Buffer.
-	if (this->m_clipPlaneBuffer)
+	// Release the Translate Constant Buffer.
+	if (this->m_translationBuffer)
 	{
-		this->m_clipPlaneBuffer->Release();
-		this->m_clipPlaneBuffer = nullptr;
+		this->m_translationBuffer->Release();
+		this->m_translationBuffer = nullptr;
 	}
 
 	// Release the Matrix Constant Buffer.
@@ -261,10 +253,10 @@ void ClipPlaneShader::ShutdownShader()
 	}
 }
 
-void ClipPlaneShader::OutputShaderErrorMessage(ID3D10Blob* errorMessage, HWND hwnd, WCHAR* shaderFileName)
+void TranslateShader::OutputShaderErrorMessage(ID3D10Blob* errorMessage, HWND hwnd, WCHAR* shaderFileName)
 {
 	char* compileErrors;
-	ofstream fout;
+	ofstream fOut;
 
 	//Get a pointer to the error message text buffer
 	compileErrors = (char*)(errorMessage->GetBufferPointer());
@@ -273,16 +265,16 @@ void ClipPlaneShader::OutputShaderErrorMessage(ID3D10Blob* errorMessage, HWND hw
 	ULONG bufferSize = errorMessage->GetBufferSize();
 
 	//Open a file to write the error message in
-	fout.open("shader-error.txt");
+	fOut.open("shader-error.txt");
 
 	//Write out the error message
 	for (ULONG i = 0; i < bufferSize; i++)
 	{
-		fout << compileErrors[i];
+		fOut << compileErrors[i];
 	}
 
 	//Close the file
-	fout.close();
+	fOut.close();
 
 	//Release the errorMessage
 	errorMessage->Release();
@@ -292,7 +284,7 @@ void ClipPlaneShader::OutputShaderErrorMessage(ID3D10Blob* errorMessage, HWND hw
 	MessageBox(hwnd, L"Error compiling shader.  Check shader-error.txt for message.", shaderFileName, MB_OK);
 }
 
-bool ClipPlaneShader::SetShaderParameters(ID3D11DeviceContext* deviceContext, D3DXMATRIX worldMatrix, D3DXMATRIX viewMatrix, D3DXMATRIX projectionMatrix, ID3D11ShaderResourceView* texture, D3DXVECTOR4 clipPlane)
+bool TranslateShader::SetShaderParameters(ID3D11DeviceContext* deviceContext, D3DXMATRIX worldMatrix, D3DXMATRIX viewMatrix, D3DXMATRIX projectionMatrix, ID3D11ShaderResourceView* texture, float translation)
 {
 	HRESULT result;
 
@@ -301,19 +293,18 @@ bool ClipPlaneShader::SetShaderParameters(ID3D11DeviceContext* deviceContext, D3
 	D3DXMatrixTranspose(&viewMatrix, &viewMatrix);
 	D3DXMatrixTranspose(&projectionMatrix, &projectionMatrix);
 
-
-	D3D11_MAPPED_SUBRESOURCE mappedResource;
+	D3D11_MAPPED_SUBRESOURCE mappedSubresource;
 	MatrixBufferType* matrixDataPtr;
 
 	//Lock the constant buffer so it can be written to
-	result = deviceContext->Map(this->m_matrixBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource);
+	result = deviceContext->Map(this->m_matrixBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedSubresource);
 	if (FAILED(result))
 	{
 		return false;
 	}
 
 	//Get a pointer to the data in the constant buffer
-	matrixDataPtr = (MatrixBufferType*)mappedResource.pData;
+	matrixDataPtr = (MatrixBufferType*)mappedSubresource.pData;
 
 	//Copy the matrices into the constant buffer
 	matrixDataPtr->world = worldMatrix;
@@ -323,29 +314,29 @@ bool ClipPlaneShader::SetShaderParameters(ID3D11DeviceContext* deviceContext, D3
 	//Unlock the constant buffer
 	deviceContext->Unmap(this->m_matrixBuffer, 0);
 
-	ClipPlaneBufferType* clipPlaneDataPtr;
+	TranslateBufferType* translateDataPtr;
 
 	//Lock the constant buffer so it can be written to
-	result = deviceContext->Map(this->m_clipPlaneBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource);
+	result = deviceContext->Map(this->m_translationBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedSubresource);
 	if (FAILED(result))
 	{
 		return false;
 	}
 
 	//Get a pointer to the data in the constant buffer
-	clipPlaneDataPtr = (ClipPlaneBufferType*)mappedResource.pData;
+	translateDataPtr = (TranslateBufferType*)mappedSubresource.pData;
 
-	//Copy the matrices into the constant buffer
-	clipPlaneDataPtr->clipPlane = clipPlane;
+	// Copy the translation value into the texture translation constant buffer.
+	translateDataPtr->translation = translation;
 
 	//Unlock the constant buffer
-	deviceContext->Unmap(this->m_clipPlaneBuffer, 0);
+	deviceContext->Unmap(this->m_translationBuffer, 0);
 
 	//Now set the constant buffer in the vertex shader with the updated values
 	deviceContext->VSSetConstantBuffers(0, 1, &this->m_matrixBuffer);
 
 	//Now set the constant buffer in the vertex shader with the updated values
-	deviceContext->VSSetConstantBuffers(1, 1, &this->m_clipPlaneBuffer);
+	deviceContext->PSSetConstantBuffers(0, 1, &this->m_translationBuffer);
 
 	//Set shader texture resource in the pixel shader
 	deviceContext->PSSetShaderResources(0, 1, &texture);
@@ -353,7 +344,7 @@ bool ClipPlaneShader::SetShaderParameters(ID3D11DeviceContext* deviceContext, D3
 	return true;
 }
 
-void ClipPlaneShader::RenderShader(ID3D11DeviceContext* deviceContext, int indexCount)
+void TranslateShader::RenderShader(ID3D11DeviceContext* deviceContext, int indexCount)
 {
 	//Set the vertex input layout
 	deviceContext->IASetInputLayout(this->m_layout);

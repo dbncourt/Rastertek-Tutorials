@@ -9,7 +9,7 @@ Graphics::Graphics()
 	this->m_Direct3D = nullptr;
 	this->m_Camera = nullptr;
 	this->m_Model = nullptr;
-	this->m_ClipPlaneShader = nullptr;
+	this->m_TranslateShader = nullptr;
 }
 
 Graphics::Graphics(const Graphics& other)
@@ -62,18 +62,18 @@ bool Graphics::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 		return false;
 	}
 
-	//Create the ClipPlaneShader object
-	this->m_ClipPlaneShader = new ClipPlaneShader();
-	if (!this->m_ClipPlaneShader)
+	//Create the TranslateShader object
+	this->m_TranslateShader = new TranslateShader();
+	if (!this->m_TranslateShader)
 	{
 		return false;
 	}
 
-	//Initialize the ClipPlaneShader object
-	result = this->m_ClipPlaneShader->Initialize(this->m_Direct3D->GetDevice(), hwnd);
+	//Initialize the TranslateShader object
+	result = this->m_TranslateShader->Initialize(this->m_Direct3D->GetDevice(), hwnd);
 	if (!result)
 	{
-		MessageBox(hwnd, L"Could not initialize the ClipPlaneShader object", L"Error", MB_OK);
+		MessageBox(hwnd, L"Could not initialize the TranslateShader object", L"Error", MB_OK);
 		return false;
 	}
 
@@ -82,12 +82,12 @@ bool Graphics::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 
 void Graphics::Shutdown()
 {
-	//Release the ClipPlaneShader object
-	if (this->m_ClipPlaneShader)
+	//Release the TranslateShader object
+	if (this->m_TranslateShader)
 	{
-		this->m_ClipPlaneShader->Shutdown();
-		delete this->m_ClipPlaneShader;
-		this->m_ClipPlaneShader = nullptr;
+		this->m_TranslateShader->Shutdown();
+		delete this->m_TranslateShader;
+		this->m_TranslateShader = nullptr;
 	}
 
 	//Release the Model object
@@ -130,8 +130,14 @@ bool Graphics::Render()
 	D3DXMATRIX projectionMatrix;
 	D3DXMATRIX worldMatrix;
 
-	//Setup a clipping plane
-	D3DXVECTOR4 clipPlane = D3DXVECTOR4(0.0f, -1.0f, 0.0f, 0.0f);
+	static float textureTranslation = 0.0f;
+
+	// Increment the texture translation position
+	textureTranslation += 0.01f;
+	if (textureTranslation > 1.0f)
+	{
+		textureTranslation -= 1.0f;
+	}
 
 	//Clear the buffers to begin the scene
 	this->m_Direct3D->BeginScene(D3DXCOLOR(0.0f, 0.0f, 0.0f, 1.0f));
@@ -147,8 +153,8 @@ bool Graphics::Render()
 	// Put the model vertex and index buffers on the graphics pipeline to prepare them for drawing.
 	this->m_Model->Render(this->m_Direct3D->GetDeviceContext());
 
-	// Render the Model with the FogShader.
-	result = this->m_ClipPlaneShader->Render(this->m_Direct3D->GetDeviceContext(), this->m_Model->GetIndexCount(), worldMatrix, viewMatrix, projectionMatrix, this->m_Model->GetTexture(), clipPlane);
+	// Render the Model with the TranslateShader.
+	result = this->m_TranslateShader->Render(this->m_Direct3D->GetDeviceContext(), this->m_Model->GetIndexCount(), worldMatrix, viewMatrix, projectionMatrix, this->m_Model->GetTexture(), textureTranslation);
 	if (!result)
 	{
 		return false;

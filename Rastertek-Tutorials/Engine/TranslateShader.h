@@ -1,8 +1,8 @@
 ////////////////////////////////////////////////////////////////////////////////
-// Filename: ClipPlaneShader.h
+// Filename: TranslateShader.h
 ////////////////////////////////////////////////////////////////////////////////
-#ifndef _CLIPPLANESHADER_H_
-#define _CLIPPLANESHADER_H_
+#ifndef _TRANSLATESHADER_H_
+#define _TRANSLATESHADER_H_
 
 
 //////////////
@@ -15,9 +15,9 @@
 using namespace std;
 
 ////////////////////////////////////////////////////////////////////////////////
-// Class name: ClipPlaneShader
+// Class name: TranslateShader
 ////////////////////////////////////////////////////////////////////////////////
-class ClipPlaneShader
+class TranslateShader
 {
 private:
 	struct MatrixBufferType
@@ -27,9 +27,10 @@ private:
 		D3DXMATRIX projection;
 	};
 
-	struct ClipPlaneBufferType
+	struct TranslateBufferType
 	{
-		D3DXVECTOR4 clipPlane;
+		float translation;
+		D3DXVECTOR3 padding;
 	};
 
 	ID3D11VertexShader* m_vertexShader;
@@ -37,23 +38,23 @@ private:
 	ID3D11InputLayout* m_layout;
 	ID3D11SamplerState* m_sampleState;
 	ID3D11Buffer* m_matrixBuffer;
-	ID3D11Buffer* m_clipPlaneBuffer;
+	ID3D11Buffer* m_translationBuffer;
 
 public:
-	ClipPlaneShader();
-	ClipPlaneShader(const ClipPlaneShader& other);
-	~ClipPlaneShader();
+	TranslateShader();
+	TranslateShader(const TranslateShader& other);
+	~TranslateShader();
 
 	bool Initialize(ID3D11Device* device, HWND hwnd);
 	void Shutdown();
-	bool Render(ID3D11DeviceContext* deviceContext, int indexCount, D3DXMATRIX worldMatrix, D3DXMATRIX viewMatrix, D3DXMATRIX projectionMatrix, ID3D11ShaderResourceView* texture, D3DXVECTOR4 clipPlane);
+	bool Render(ID3D11DeviceContext* deviceContext, int indexCount, D3DXMATRIX worldMatrix, D3DXMATRIX viewMatrix, D3DXMATRIX projectionMatrix, ID3D11ShaderResourceView* texture, float translation);
 
 private:
 	bool InitializeShader(ID3D11Device* device, HWND hwnd, WCHAR* vertexShaderFileName, WCHAR* pixelShaderFileName);
 	void ShutdownShader();
 	void OutputShaderErrorMessage(ID3D10Blob* errorMessage, HWND hwnd, WCHAR* shaderFilename);
 
-	bool SetShaderParameters(ID3D11DeviceContext* deviceContext, D3DXMATRIX worldMatrix, D3DXMATRIX viewMatrix, D3DXMATRIX projectionMatrix, ID3D11ShaderResourceView* texture, D3DXVECTOR4 clipPlane);
+	bool SetShaderParameters(ID3D11DeviceContext* deviceContext, D3DXMATRIX worldMatrix, D3DXMATRIX viewMatrix, D3DXMATRIX projectionMatrix, ID3D11ShaderResourceView* texture, float translation);
 	void RenderShader(ID3D11DeviceContext* deviceContext, int indexCount);
 };
 #endif

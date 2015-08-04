@@ -1,21 +1,16 @@
 ////////////////////////////////////////////////////////////////////////////////
-// Filename: ClipPlaneVertexShader.hlsl
+// Filename: TranslateVertexShader.hlsl
 ////////////////////////////////////////////////////////////////////////////////
-
 
 /////////////
 // GLOBALS //
 /////////////
+
 cbuffer MatrixBuffer
 {
 	matrix worldMatrix;
 	matrix viewMatrix;
 	matrix projectionMatrix;
-};
-
-cbuffer ClipPlaneBuffer
-{
-	float4 clipPlane;
 };
 
 //////////////
@@ -31,13 +26,11 @@ struct PixelInputType
 {
 	float4 position : SV_POSITION;
 	float2 tex : TEXCOORD0;
-	float clip : SV_ClipDistance0;
 };
 
 ////////////////////////////////////////////////////////////////////////////////
 // Vertex Shader
 ////////////////////////////////////////////////////////////////////////////////
-
 PixelInputType main(VertexInputType input)
 {
 	PixelInputType output;
@@ -52,9 +45,6 @@ PixelInputType main(VertexInputType input)
 
 	// Store the texture coordinates for the pixel shader.
 	output.tex = input.tex;
-
-	// Set the clipping plane.
-	output.clip = dot(mul(input.position, worldMatrix), clipPlane);
 
 	return output;
 }

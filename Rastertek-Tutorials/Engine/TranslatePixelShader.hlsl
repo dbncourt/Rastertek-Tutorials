@@ -1,7 +1,6 @@
 ////////////////////////////////////////////////////////////////////////////////
-// Filename: ClipPlanePixelShader.hlsl
+// Filename: TranslatePixelShader.hlsl
 ////////////////////////////////////////////////////////////////////////////////
-
 
 /////////////
 // GLOBALS //
@@ -9,6 +8,10 @@
 Texture2D shaderTexture;
 SamplerState SampleType;
 
+cbuffer TranslationBuffer
+{
+	float textureTranslation;
+};
 
 //////////////
 // TYPEDEFS //
@@ -17,15 +20,17 @@ struct PixelInputType
 {
 	float4 position : SV_POSITION;
 	float2 tex : TEXCOORD0;
-	float clip : SV_ClipDistance0;
 };
 
 
 ////////////////////////////////////////////////////////////////////////////////
 // Pixel Shader
 ////////////////////////////////////////////////////////////////////////////////
-
 float4 main(PixelInputType input) : SV_TARGET
 {
+	// Translate the position where we sample the pixel from.
+	input.tex += textureTranslation;
+
+
 	return shaderTexture.Sample(SampleType, input.tex);
 }
