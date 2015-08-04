@@ -1,27 +1,26 @@
 ////////////////////////////////////////////////////////////////////////////////
-// Filename: Bitmap.cpp
+// Filename: DebugWindow.cpp
 ////////////////////////////////////////////////////////////////////////////////
-#include "Bitmap.h"
+#include "DebugWindow.h"
 
 
-Bitmap::Bitmap()
+DebugWindow::DebugWindow()
 {
 	this->m_vertexBuffer = nullptr;
 	this->m_indexBuffer = nullptr;
-	this->m_Texture = nullptr;
 }
 
-Bitmap::Bitmap(const Bitmap& other)
+DebugWindow::DebugWindow(const DebugWindow& other)
 {
 }
 
 
-Bitmap::~Bitmap()
+DebugWindow::~DebugWindow()
 {
 }
 
 
-bool Bitmap::Initialize(ID3D11Device* device, int screenWidth, int screenHeight, WCHAR* textureFilename, int bitmapWidth, int bitmapHeight)
+bool DebugWindow::Initialize(ID3D11Device* device, int screenWidth, int screenHeight, int bitmapWidth, int bitmapHeight)
 {
 	bool result;
 
@@ -38,58 +37,44 @@ bool Bitmap::Initialize(ID3D11Device* device, int screenWidth, int screenHeight,
 	this->m_previousPosY = -1;
 
 	//Initialize the vertex and index buffers.
-	result = Bitmap::InitializeBuffers(device);
+	result = DebugWindow::InitializeBuffers(device);
 	if (!result)
 	{
 		return false;
 	}
 
-	//Load the texture for this model
-	result = Bitmap::LoadTexture(device, textureFilename);
-	if (!result)
-	{
-		return false;
-	}
 	return true;
 }
 
-void Bitmap::Shutdown()
+void DebugWindow::Shutdown()
 {
-	// Release the model texture.
-	Bitmap::ReleaseTexture();
-
 	// Shutdown the vertex and index buffers.
-	Bitmap::ShutdownBuffers();
+	DebugWindow::ShutdownBuffers();
 }
 
-bool Bitmap::Render(ID3D11DeviceContext* deviceContext, int positionX, int positionY)
+bool DebugWindow::Render(ID3D11DeviceContext* deviceContext, int positionX, int positionY)
 {
 	bool result;
 
 	//Re-build the dynamic vertex buffer for rendering to possibly a different location on the screen
-	result = Bitmap::UpdateBuffers(deviceContext, positionX, positionY);
+	result = DebugWindow::UpdateBuffers(deviceContext, positionX, positionY);
 	if (!result)
 	{
 		return false;
 	}
 
 	//Put the vertex and index buffers on the graphics pipeline to prepare them for drawing
-	Bitmap::RenderBuffers(deviceContext);
+	DebugWindow::RenderBuffers(deviceContext);
 
 	return true;
 }
 
-UINT Bitmap::GetIndexCount()
+UINT DebugWindow::GetIndexCount()
 {
 	return this->m_indexCount;
 }
 
-ID3D11ShaderResourceView* Bitmap::GetTexture()
-{
-	return this->m_Texture->GetTexture();
-}
-
-bool Bitmap::InitializeBuffers(ID3D11Device* device)
+bool DebugWindow::InitializeBuffers(ID3D11Device* device)
 {
 	HRESULT result;
 	VertexType* vertices;
@@ -183,7 +168,7 @@ bool Bitmap::InitializeBuffers(ID3D11Device* device)
 	return true;
 }
 
-void Bitmap::ShutdownBuffers()
+void DebugWindow::ShutdownBuffers()
 {
 	if (this->m_vertexBuffer)
 	{
@@ -198,7 +183,7 @@ void Bitmap::ShutdownBuffers()
 	}
 }
 
-bool Bitmap::UpdateBuffers(ID3D11DeviceContext* deviceContext, int positionX, int positionY)
+bool DebugWindow::UpdateBuffers(ID3D11DeviceContext* deviceContext, int positionX, int positionY)
 {
 	HRESULT result;
 
@@ -281,7 +266,7 @@ bool Bitmap::UpdateBuffers(ID3D11DeviceContext* deviceContext, int positionX, in
 	return true;
 }
 
-void Bitmap::RenderBuffers(ID3D11DeviceContext* deviceContext)
+void DebugWindow::RenderBuffers(ID3D11DeviceContext* deviceContext)
 {
 	UINT stride;
 	UINT offset;
@@ -298,34 +283,4 @@ void Bitmap::RenderBuffers(ID3D11DeviceContext* deviceContext)
 
 	//Set the type of primitive that should be rendered from this vertex buffer, in this case, triangles
 	deviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-}
-
-bool Bitmap::LoadTexture(ID3D11Device* device, WCHAR* textureFilename)
-{
-	bool result;
-
-	//Create the texture object
-	this->m_Texture = new Texture();
-	if (!this->m_Texture)
-	{
-		return false;
-	}
-
-	result = this->m_Texture->Initialize(device, textureFilename);
-	if (!result)
-	{
-		return false;
-	}
-
-	return true;
-}
-
-void Bitmap::ReleaseTexture()
-{
-	if (this->m_Texture)
-	{
-		this->m_Texture->Shutdown();
-		delete this->m_Texture;
-		this->m_Texture = nullptr;
-	}
 }

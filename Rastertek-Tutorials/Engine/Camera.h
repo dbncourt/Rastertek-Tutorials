@@ -33,5 +33,4 @@ public:
 	void Render();
 	void GetViewMatrix(D3DXMATRIX& viewMatrix);
 };
-
 #endif

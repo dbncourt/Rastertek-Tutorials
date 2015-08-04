@@ -4,18 +4,18 @@
 #ifndef _GRAPHICS_H_
 #define _GRAPHICS_H_
 
-//////////////
-// INCLUDES //
-//////////////
-#include <windows.h>
-
 ///////////////////////
 // MY CLASS INCLUDES //
 ///////////////////////
 #include "Direct3D.h"
 #include "Camera.h"
+#include "Model.h"
+#include "LightShader.h"
+#include "Light.h"
+#include "RenderTexture.h"
+#include "DebugWindow.h"
 #include "TextureShader.h"
-#include "Bitmap.h"
+
 
 /////////////
 // GLOBALS //
@@ -31,11 +31,16 @@ const float SCREEN_NEAR = 0.1f;
 ////////////////////////////////////////////////////////////////////////////////
 class Graphics
 {
+
 private:
 	Direct3D* m_Direct3D;
 	Camera* m_Camera;
+	Model* m_Model;
+	LightShader* m_LightShader;
+	Light* m_Light;
+	RenderTexture* m_RenderTexture;
+	DebugWindow* m_DebugWindow;
 	TextureShader* m_TextureShader;
-	Bitmap* m_Bitmap;
 
 public:
 	Graphics();
@@ -44,9 +49,12 @@ public:
 
 	bool Initialize(int screenWidth, int screenHeight, HWND hwnd);
 	void Shutdown();
+
 	bool Frame();
+	bool Render();
 
 private:
-	bool Render(float rotation);
+	bool RenderToTexture();
+	bool RenderScene();
 };
 #endif
