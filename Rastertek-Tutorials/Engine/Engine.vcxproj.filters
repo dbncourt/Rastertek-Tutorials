@@ -60,6 +60,12 @@
     <ClInclude Include="TextureShader.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="ReflectionShader.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="RenderTexture.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Graphics.cpp">
@@ -92,32 +98,38 @@
     <ClCompile Include="TextureShader.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="ReflectionShader.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="RenderTexture.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <Image Include="dirt01.dds">
-      <Filter>Resource Files\Texture</Filter>
-    </Image>
-    <Image Include="stone01.dds">
-      <Filter>Resource Files\Texture</Filter>
-    </Image>
-  </ItemGroup>
-  <ItemGroup>
-    <FxCompile Include="TransparentVertexShader.hlsl">
-      <Filter>Resource Files\Shader\Vertex</Filter>
-    </FxCompile>
     <FxCompile Include="TextureVertexShader.hlsl">
       <Filter>Resource Files\Shader\Vertex</Filter>
-    </FxCompile>
-    <FxCompile Include="TransparentPixelShader.hlsl">
-      <Filter>Resource Files\Shader\Pixel</Filter>
     </FxCompile>
     <FxCompile Include="TexturePixelShader.hlsl">
       <Filter>Resource Files\Shader\Pixel</Filter>
     </FxCompile>
+    <FxCompile Include="ReflectionPixelShader.hlsl">
+      <Filter>Resource Files\Shader\Pixel</Filter>
+    </FxCompile>
+    <FxCompile Include="ReflectionVertexShader.hlsl">
+      <Filter>Resource Files\Shader\Vertex</Filter>
+    </FxCompile>
   </ItemGroup>
   <ItemGroup>
-    <Text Include="square.txt">
+    <Text Include="floor.txt">
       <Filter>Resource Files\Model</Filter>
     </Text>
+    <Text Include="cube.txt">
+      <Filter>Resource Files\Model</Filter>
+    </Text>
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="seafloor.dds">
+      <Filter>Resource Files\Texture</Filter>
+    </Image>
   </ItemGroup>
 </Project>

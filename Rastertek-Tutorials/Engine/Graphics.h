@@ -11,7 +11,8 @@
 #include "Camera.h"
 #include "Model.h"
 #include "TextureShader.h"
-#include "TransparentShader.h"
+#include "RenderTexture.h"
+#include "ReflectionShader.h"
 
 
 /////////////
@@ -32,10 +33,11 @@ class Graphics
 private:
 	Direct3D* m_Direct3D;
 	Camera* m_Camera;
-	Model* m_Model1;
-	Model* m_Model2;
+	Model* m_Model;
 	TextureShader* m_TextureShader;
-	TransparentShader* m_TransparentShader;
+	RenderTexture* m_RenderTexture;
+	Model* m_FloorModel;
+	ReflectionShader* m_ReflectionShader;
 
 public:
 	Graphics();
@@ -47,5 +49,9 @@ public:
 
 	bool Frame();
 	bool Render();
+
+private:
+	bool RenderToTexture();
+	bool RenderScene();
 };
 #endif
