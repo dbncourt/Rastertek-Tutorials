@@ -147,7 +147,7 @@ bool Graphics::Render()
 	// Put the model vertex and index buffers on the graphics pipeline to prepare them for drawing.
 	this->m_Model->Render(this->m_Direct3D->GetDeviceContext());
 
-	// Render the Model with the FogShader.
+	// Render the Model with the ClipPlaneShader.
 	result = this->m_ClipPlaneShader->Render(this->m_Direct3D->GetDeviceContext(), this->m_Model->GetIndexCount(), worldMatrix, viewMatrix, projectionMatrix, this->m_Model->GetTexture(), clipPlane);
 	if (!result)
 	{
