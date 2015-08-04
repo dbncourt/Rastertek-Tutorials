@@ -1,12 +1,14 @@
 ////////////////////////////////////////////////////////////////////////////////
-// Filename: TexturePixelShader.hlsl
+// Filename: FogPixelShader.hlsl
 ////////////////////////////////////////////////////////////////////////////////
+
 
 /////////////
 // GLOBALS //
 /////////////
 Texture2D shaderTexture;
 SamplerState SampleType;
+
 
 //////////////
 // TYPEDEFS //
@@ -15,6 +17,7 @@ struct PixelInputType
 {
 	float4 position : SV_POSITION;
 	float2 tex : TEXCOORD0;
+	float fogFactor : FOG;
 };
 
 
@@ -24,9 +27,17 @@ struct PixelInputType
 float4 main(PixelInputType input) : SV_TARGET
 {
 	float4 textureColor;
+	float4 fogColor;
+	float4 finalColor;
 
-	// Sample the pixel color from the texture using the sampler at this texture coordinate location.
+	//Sample the texture pixel at this location
 	textureColor = shaderTexture.Sample(SampleType, input.tex);
 
-	return textureColor;
+	//Set the color of the fog to grey
+	fogColor = float4(0.5f, 0.5f, 0.5f, 1.0f);
+
+	//Calculate the final color using the fog effect equation
+	finalColor = input.fogFactor * textureColor + (1.0 - input.fogFactor) * fogColor;
+
+	return finalColor;
 }

@@ -1,8 +1,9 @@
 ////////////////////////////////////////////////////////////////////////////////
-// Filename: LightShader.h
+// Filename: FogShader.h
 ////////////////////////////////////////////////////////////////////////////////
-#ifndef _LIGHTSHADER_H_
-#define _LIGHTSHADER_H_
+#ifndef _FOGSHADER_H_
+#define _FOGSHADER_H_
+
 
 //////////////
 // INCLUDES //
@@ -13,25 +14,25 @@
 #include <fstream>
 using namespace std;
 
-////////////////////////////////////////////////////////////////////////////////
-// Class name: LightShader
-////////////////////////////////////////////////////////////////////////////////
-class LightShader
-{
 
+////////////////////////////////////////////////////////////////////////////////
+// Class name: FogShader
+////////////////////////////////////////////////////////////////////////////////
+class FogShader
+{
 private:
 	struct MatrixBufferType
 	{
-		D3DXMATRIX world;
-		D3DXMATRIX view;
-		D3DXMATRIX projection;
+		D3DXMATRIX worldMatrix;
+		D3DXMATRIX viewMatrix;
+		D3DXMATRIX projectionMatrix;
 	};
 
-	struct LightBufferType
+	struct FogBufferType
 	{
-		D3DXCOLOR diffuseColor;
-		D3DXVECTOR3 lightDirection;
-		float padding;
+		float fogStart;
+		float fogEnd;
+		D3DXVECTOR2 padding;
 	};
 
 	ID3D11VertexShader* m_vertexShader;
@@ -39,23 +40,23 @@ private:
 	ID3D11InputLayout* m_inputLayout;
 	ID3D11SamplerState* m_samplerState;
 	ID3D11Buffer* m_matrixBuffer;
-	ID3D11Buffer* m_lightBuffer;
+	ID3D11Buffer* m_fogBuffer;
 
 public:
-	LightShader();
-	LightShader(const LightShader& other);
-	~LightShader();
+	FogShader();
+	FogShader(const FogShader& other);
+	~FogShader();
 
 	bool Initialize(ID3D11Device* device, HWND hwnd);
 	void Shutdown();
-	bool Render(ID3D11DeviceContext* deviceContext, int indexCount, D3DXMATRIX worldMatrix, D3DXMATRIX viewMatrix, D3DXMATRIX projectionMatrix, ID3D11ShaderResourceView* texture, D3DXVECTOR3 lightDirection, D3DXCOLOR diffuseColor);
+	bool Render(ID3D11DeviceContext* deviceContext, int indexCount, D3DXMATRIX worldMatrix, D3DXMATRIX viewMatrix, D3DXMATRIX projectionMatrix, ID3D11ShaderResourceView* texture, float fogStart, float fogEnd);
 
 private:
 	bool InitializeShader(ID3D11Device* device, HWND hwnd, WCHAR* vertexShaderFileName, WCHAR* pixelShaderFileName);
 	void ShutdownShader();
 	void OutputShaderErrorMessage(ID3D10Blob* errorMessage, HWND hwnd, WCHAR* shaderFileName);
-
-	bool SetShaderParameters(ID3D11DeviceContext* deviceContext, D3DXMATRIX worldMatrix, D3DXMATRIX viewMatrix, D3DXMATRIX projectionMatrix, ID3D11ShaderResourceView* texture, D3DXVECTOR3 lightDirection, D3DXCOLOR diffuseColor);
+	bool SetShaderParameters(ID3D11DeviceContext* deviceContext, D3DXMATRIX worldMatrix, D3DXMATRIX viewMatrix, D3DXMATRIX projectionMatrix, ID3D11ShaderResourceView* texture, float fogStart, float fogEnd);
 	void RenderShader(ID3D11DeviceContext* deviceContext, int indexCount);
 };
+
 #endif

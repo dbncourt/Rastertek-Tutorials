@@ -51,22 +51,10 @@
     <ClInclude Include="Texture.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="TextureShader.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="DebugWindow.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Light.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Model.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="RenderTexture.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="LightShader.h">
+    <ClInclude Include="FogShader.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -92,22 +80,10 @@
     <ClCompile Include="Texture.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="TextureShader.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="DebugWindow.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Light.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Model.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="RenderTexture.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="LightShader.cpp">
+    <ClCompile Include="FogShader.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -117,22 +93,16 @@
     </Image>
   </ItemGroup>
   <ItemGroup>
-    <FxCompile Include="TexturePixelShader.hlsl">
-      <Filter>Resource Files\Shader\Pixel</Filter>
-    </FxCompile>
-    <FxCompile Include="TextureVertexShader.hlsl">
-      <Filter>Resource Files\Shader\Vertex</Filter>
-    </FxCompile>
-    <FxCompile Include="LightPixelShader.hlsl">
-      <Filter>Resource Files\Shader\Pixel</Filter>
-    </FxCompile>
-    <FxCompile Include="LightVertexShader.hlsl">
-      <Filter>Resource Files\Shader\Vertex</Filter>
-    </FxCompile>
-  </ItemGroup>
-  <ItemGroup>
     <Text Include="cube.txt">
       <Filter>Resource Files\Model</Filter>
     </Text>
+  </ItemGroup>
+  <ItemGroup>
+    <FxCompile Include="FogPixelShader.hlsl">
+      <Filter>Resource Files\Shader\Pixel</Filter>
+    </FxCompile>
+    <FxCompile Include="FogVertexShader.hlsl">
+      <Filter>Resource Files\Shader\Vertex</Filter>
+    </FxCompile>
   </ItemGroup>
 </Project>
