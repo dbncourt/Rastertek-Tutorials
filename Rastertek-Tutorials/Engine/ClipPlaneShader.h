@@ -1,8 +1,8 @@
 ////////////////////////////////////////////////////////////////////////////////
-// Filename: FogShader.h
+// Filename: ClipPlaneShader.h
 ////////////////////////////////////////////////////////////////////////////////
-#ifndef _FOGSHADER_H_
-#define _FOGSHADER_H_
+#ifndef _CLIPPLANESHADER_H_
+#define _CLIPPLANESHADER_H_
 
 
 //////////////
@@ -14,49 +14,46 @@
 #include <fstream>
 using namespace std;
 
-
 ////////////////////////////////////////////////////////////////////////////////
-// Class name: FogShader
+// Class name: ClipPlaneShader
 ////////////////////////////////////////////////////////////////////////////////
-class FogShader
+class ClipPlaneShader
 {
 private:
 	struct MatrixBufferType
 	{
-		D3DXMATRIX worldMatrix;
-		D3DXMATRIX viewMatrix;
-		D3DXMATRIX projectionMatrix;
+		D3DXMATRIX world;
+		D3DXMATRIX view;
+		D3DXMATRIX projection;
 	};
 
-	struct FogBufferType
+	struct ClipPlaneBufferType
 	{
-		float fogStart;
-		float fogEnd;
-		D3DXVECTOR2 padding;
+		D3DXVECTOR4 clipPlane;
 	};
 
 	ID3D11VertexShader* m_vertexShader;
 	ID3D11PixelShader* m_pixelShader;
-	ID3D11InputLayout* m_inputLayout;
-	ID3D11SamplerState* m_samplerState;
+	ID3D11InputLayout* m_layout;
+	ID3D11SamplerState* m_sampleState;
 	ID3D11Buffer* m_matrixBuffer;
-	ID3D11Buffer* m_fogBuffer;
+	ID3D11Buffer* m_clipPlaneBuffer;
 
 public:
-	FogShader();
-	FogShader(const FogShader& other);
-	~FogShader();
+	ClipPlaneShader();
+	ClipPlaneShader(const ClipPlaneShader& other);
+	~ClipPlaneShader();
 
 	bool Initialize(ID3D11Device* device, HWND hwnd);
 	void Shutdown();
-	bool Render(ID3D11DeviceContext* deviceContext, int indexCount, D3DXMATRIX worldMatrix, D3DXMATRIX viewMatrix, D3DXMATRIX projectionMatrix, ID3D11ShaderResourceView* texture, float fogStart, float fogEnd);
+	bool Render(ID3D11DeviceContext* deviceContext, int indexCount, D3DXMATRIX worldMatrix, D3DXMATRIX viewMatrix, D3DXMATRIX projectionMatrix, ID3D11ShaderResourceView* texture, D3DXVECTOR4 clipPlane);
 
 private:
 	bool InitializeShader(ID3D11Device* device, HWND hwnd, WCHAR* vertexShaderFileName, WCHAR* pixelShaderFileName);
 	void ShutdownShader();
-	void OutputShaderErrorMessage(ID3D10Blob* errorMessage, HWND hwnd, WCHAR* shaderFileName);
-	bool SetShaderParameters(ID3D11DeviceContext* deviceContext, D3DXMATRIX worldMatrix, D3DXMATRIX viewMatrix, D3DXMATRIX projectionMatrix, ID3D11ShaderResourceView* texture, float fogStart, float fogEnd);
+	void OutputShaderErrorMessage(ID3D10Blob* errorMessage, HWND hwnd, WCHAR* shaderFilename);
+
+	bool SetShaderParameters(ID3D11DeviceContext* deviceContext, D3DXMATRIX worldMatrix, D3DXMATRIX viewMatrix, D3DXMATRIX projectionMatrix, ID3D11ShaderResourceView* texture, D3DXVECTOR4 clipPlane);
 	void RenderShader(ID3D11DeviceContext* deviceContext, int indexCount);
 };
-
 #endif

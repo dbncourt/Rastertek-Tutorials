@@ -1,23 +1,22 @@
 ////////////////////////////////////////////////////////////////////////////////
-// Filename: FogVertexShader.hlsl
+// Filename: ClipPlaneVertexShader.hlsl
 ////////////////////////////////////////////////////////////////////////////////
+
 
 /////////////
 // GLOBALS //
 /////////////
-cbuffer PerFrameBuffer
+cbuffer MatrixBuffer
 {
 	matrix worldMatrix;
 	matrix viewMatrix;
 	matrix projectionMatrix;
 };
 
-cbuffer FogBuffer
+cbuffer ClipPlaneBuffer
 {
-	float fogStart;
-	float fogEnd;
+	float4 clipPlane;
 };
-
 
 //////////////
 // TYPEDEFS //
@@ -32,15 +31,16 @@ struct PixelInputType
 {
 	float4 position : SV_POSITION;
 	float2 tex : TEXCOORD0;
-	float fogFactor : FOG;
+	float clip : SV_ClipDistance0;
 };
 
+////////////////////////////////////////////////////////////////////////////////
+// Vertex Shader
+////////////////////////////////////////////////////////////////////////////////
 
 PixelInputType main(VertexInputType input)
 {
 	PixelInputType output;
-	float4 cameraPosition;
-	float fogDensity = 0.12f;
 
 	// Change the position vector to be 4 units for proper matrix calculations.
 	input.position.w = 1.0f;
@@ -53,15 +53,8 @@ PixelInputType main(VertexInputType input)
 	// Store the texture coordinates for the pixel shader.
 	output.tex = input.tex;
 
-	//Calculate the camera position
-	cameraPosition = mul(input.position, worldMatrix);
-	cameraPosition = mul(cameraPosition, viewMatrix);
-
-	//Calculate linear fog
-
-	output.fogFactor = saturate((fogEnd - cameraPosition.z) / (fogEnd - fogStart)); //Linear Fog
-	//output.fogFactor = saturate(pow(0.36787968862663154641905911090837f, cameraPosition.z * fogDensity)); //Exponential Fog
-	//output.fogFactor = saturate(pow(0.36787968862663154641905911090837f, ((cameraPosition.z *fogDensity) * cameraPosition.z * fogDensity)));
+	// Set the clipping plane.
+	output.clip = dot(mul(input.position, worldMatrix), clipPlane);
 
 	return output;
 }

@@ -54,7 +54,7 @@
     <ClInclude Include="Model.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="FogShader.h">
+    <ClInclude Include="ClipPlaneShader.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -83,7 +83,7 @@
     <ClCompile Include="Model.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="FogShader.cpp">
+    <ClCompile Include="ClipPlaneShader.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -93,16 +93,16 @@
     </Image>
   </ItemGroup>
   <ItemGroup>
-    <Text Include="cube.txt">
-      <Filter>Resource Files\Model</Filter>
-    </Text>
-  </ItemGroup>
-  <ItemGroup>
-    <FxCompile Include="FogPixelShader.hlsl">
+    <FxCompile Include="ClipPlanePixelShader.hlsl">
       <Filter>Resource Files\Shader\Pixel</Filter>
     </FxCompile>
-    <FxCompile Include="FogVertexShader.hlsl">
+    <FxCompile Include="ClipPlaneVertexShader.hlsl">
       <Filter>Resource Files\Shader\Vertex</Filter>
     </FxCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="triangle.txt">
+      <Filter>Resource Files\Model</Filter>
+    </Text>
   </ItemGroup>
 </Project>
