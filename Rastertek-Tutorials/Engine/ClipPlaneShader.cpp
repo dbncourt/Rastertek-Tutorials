@@ -264,7 +264,7 @@ void ClipPlaneShader::ShutdownShader()
 void ClipPlaneShader::OutputShaderErrorMessage(ID3D10Blob* errorMessage, HWND hwnd, WCHAR* shaderFileName)
 {
 	char* compileErrors;
-	ofstream fout;
+	ofstream fOut;
 
 	//Get a pointer to the error message text buffer
 	compileErrors = (char*)(errorMessage->GetBufferPointer());
@@ -273,16 +273,16 @@ void ClipPlaneShader::OutputShaderErrorMessage(ID3D10Blob* errorMessage, HWND hw
 	ULONG bufferSize = errorMessage->GetBufferSize();
 
 	//Open a file to write the error message in
-	fout.open("shader-error.txt");
+	fOut.open("shader-error.txt");
 
 	//Write out the error message
 	for (ULONG i = 0; i < bufferSize; i++)
 	{
-		fout << compileErrors[i];
+		fOut << compileErrors[i];
 	}
 
 	//Close the file
-	fout.close();
+	fOut.close();
 
 	//Release the errorMessage
 	errorMessage->Release();
