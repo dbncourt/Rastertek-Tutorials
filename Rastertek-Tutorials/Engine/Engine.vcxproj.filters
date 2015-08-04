@@ -54,7 +54,10 @@
     <ClInclude Include="Model.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="TranslateShader.h">
+    <ClInclude Include="TransparentShader.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="TextureShader.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -83,26 +86,38 @@
     <ClCompile Include="Model.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="TranslateShader.cpp">
+    <ClCompile Include="TransparentShader.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="TextureShader.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <Image Include="seafloor.dds">
+    <Image Include="dirt01.dds">
+      <Filter>Resource Files\Texture</Filter>
+    </Image>
+    <Image Include="stone01.dds">
       <Filter>Resource Files\Texture</Filter>
     </Image>
   </ItemGroup>
   <ItemGroup>
-    <Text Include="triangle.txt">
-      <Filter>Resource Files\Model</Filter>
-    </Text>
-  </ItemGroup>
-  <ItemGroup>
-    <FxCompile Include="TranslatePixelShader.hlsl">
-      <Filter>Resource Files\Shader\Pixel</Filter>
-    </FxCompile>
-    <FxCompile Include="TranslateVertexShader.hlsl">
+    <FxCompile Include="TransparentVertexShader.hlsl">
       <Filter>Resource Files\Shader\Vertex</Filter>
     </FxCompile>
+    <FxCompile Include="TextureVertexShader.hlsl">
+      <Filter>Resource Files\Shader\Vertex</Filter>
+    </FxCompile>
+    <FxCompile Include="TransparentPixelShader.hlsl">
+      <Filter>Resource Files\Shader\Pixel</Filter>
+    </FxCompile>
+    <FxCompile Include="TexturePixelShader.hlsl">
+      <Filter>Resource Files\Shader\Pixel</Filter>
+    </FxCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="square.txt">
+      <Filter>Resource Files\Model</Filter>
+    </Text>
   </ItemGroup>
 </Project>

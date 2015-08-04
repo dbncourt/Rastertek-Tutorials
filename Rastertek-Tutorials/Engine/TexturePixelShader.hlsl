@@ -1,5 +1,5 @@
 ////////////////////////////////////////////////////////////////////////////////
-// Filename: TranslatePixelShader.hlsl
+// Filename: TexturePixelShader.hlsl
 ////////////////////////////////////////////////////////////////////////////////
 
 /////////////
@@ -7,11 +7,6 @@
 /////////////
 Texture2D shaderTexture;
 SamplerState SampleType;
-
-cbuffer TranslationBuffer
-{
-	float textureTranslation;
-};
 
 //////////////
 // TYPEDEFS //
@@ -28,9 +23,11 @@ struct PixelInputType
 ////////////////////////////////////////////////////////////////////////////////
 float4 main(PixelInputType input) : SV_TARGET
 {
-	// Translate the position where we sample the pixel from.
-	input.tex += textureTranslation;
+	float4 textureColor;
 
 
-	return shaderTexture.Sample(SampleType, input.tex);
+	// Sample the pixel color from the texture using the sampler at this texture coordinate location.
+	textureColor = shaderTexture.Sample(SampleType, input.tex);
+
+	return textureColor;
 }
