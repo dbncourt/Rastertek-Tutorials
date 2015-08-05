@@ -8,6 +8,7 @@ System::System()
 {
 	this->m_Input = nullptr;
 	this->m_Graphics = nullptr;
+	this->m_Timer = nullptr;
 }
 
 System::System(const System& other)
@@ -58,6 +59,21 @@ bool System::Initialize()
 	if (!result)
 	{
 		MessageBox(this->m_hwnd, L"Could not initialize the Graphics object", L"Error", MB_OK);
+		return false;
+	}
+
+	//Create the Timer object
+	this->m_Timer = new Timer();
+	if (!this->m_Timer)
+	{
+		return false;
+	}
+
+	//Initialize the Timer object
+	result = this->m_Timer->Intialize();
+	if (!result)
+	{
+		MessageBox(this->m_hwnd, L"Could not initialize the Timer object", L"Error", MB_OK);
 		return false;
 	}
 
@@ -134,8 +150,9 @@ void System::Run()
 bool System::Frame()
 {
 	bool result;
-	int mouseX;
-	int mouseY;
+
+	// Update the system stats.
+	this->m_Timer->Frame();
 
 	//Do the input frame processing
 	result = this->m_Input->Frame();
@@ -144,11 +161,8 @@ bool System::Frame()
 		return false;
 	}
 
-	//Get the location of the mouse from the input object
-	this->m_Input->GetMouseLocation(mouseX, mouseY);
-
 	//Do the frame processing for the graphics object
-	result = this->m_Graphics->Frame();
+	result = this->m_Graphics->Frame(this->m_Timer->GetTime());
 	if (!result)
 	{
 		return false;

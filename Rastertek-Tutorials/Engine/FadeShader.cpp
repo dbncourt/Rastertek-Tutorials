@@ -1,66 +1,65 @@
 ////////////////////////////////////////////////////////////////////////////////
-// Filename: TransparentShader.cpp
+// Filename: FadeShader.cpp
 ////////////////////////////////////////////////////////////////////////////////
-#include "TransparentShader.h"
+#include "FadeShader.h"
 
-TransparentShader::TransparentShader()
+FadeShader::FadeShader()
 {
 	this->m_vertexShader = nullptr;
 	this->m_pixelShader = nullptr;
-	this->m_layout = nullptr;
-	this->m_sampleState = nullptr;
+	this->m_inputLayout = nullptr;
+	this->m_samplerState = nullptr;
 	this->m_matrixBuffer = nullptr;
-	this->m_transparentBuffer = nullptr;
+	this->m_fadeBuffer = nullptr;
 }
 
-TransparentShader::TransparentShader(const TransparentShader& other)
+FadeShader::FadeShader(const FadeShader& other)
 {
 }
 
-TransparentShader::~TransparentShader()
+FadeShader::~FadeShader()
 {
 }
 
-bool TransparentShader::Initialize(ID3D11Device* device, HWND hwnd)
+bool FadeShader::Initialize(ID3D11Device* device, HWND hwnd)
 {
 	bool result;
 
 	//Initialize the vertex and pixel shaders
-	result = TransparentShader::InitializeShader(device, hwnd, L"TransparentVertexShader.hlsl", L"TransparentPixelShader.hlsl");
+	result = FadeShader::InitializeShader(device, hwnd, L"FadeVertexShader.hlsl", L"FadePixelShader.hlsl");
 	if (!result)
 	{
 		return false;
 	}
-
 	return true;
 }
 
-void TransparentShader::Shutdown()
+void FadeShader::Shutdown()
 {
 	//Shutdown the vertex and pixel shaders as well as the related objects
-	TransparentShader::ShutdownShader();
+	FadeShader::ShutdownShader();
 }
 
-bool TransparentShader::Render(ID3D11DeviceContext* deviceContext, int indexCount, D3DXMATRIX worldMatrix, D3DXMATRIX viewMatrix, D3DXMATRIX projectionMatrix, ID3D11ShaderResourceView* texture, float blendAmount)
+bool FadeShader::Render(ID3D11DeviceContext* deviceContext, int indexCount, D3DXMATRIX worldMatrix, D3DXMATRIX viewMatrix, D3DXMATRIX projectionMatrix, ID3D11ShaderResourceView* texture, float fadeAmount)
 {
 	bool result;
+
 	//Set the shader parameters that it will use for rendering
-	result = TransparentShader::SetShaderParameters(deviceContext, worldMatrix, viewMatrix, projectionMatrix, texture, blendAmount);
+	result = FadeShader::SetShaderParameters(deviceContext, worldMatrix, viewMatrix, projectionMatrix, texture, fadeAmount);
 	if (!result)
 	{
 		return false;
 	}
 
 	//Now render the prepared buffer with the shader
-	TransparentShader::RenderShader(deviceContext, indexCount);
+	FadeShader::RenderShader(deviceContext, indexCount);
 
 	return true;
 }
 
-bool TransparentShader::InitializeShader(ID3D11Device* device, HWND hwnd, WCHAR* vertexShaderFileName, WCHAR* pixelShaderFileName)
+bool FadeShader::InitializeShader(ID3D11Device* device, HWND hwnd, WCHAR* vertexShaderFileName, WCHAR* pixelShaderFileName)
 {
 	HRESULT result;
-
 	ID3D10Blob* errorMessage = nullptr;
 	ID3D10Blob* vertexShaderBuffer = nullptr;
 	ID3D10Blob* pixelShaderBuffer = nullptr;
@@ -72,7 +71,7 @@ bool TransparentShader::InitializeShader(ID3D11Device* device, HWND hwnd, WCHAR*
 		//If the shader failed to compile, it should have written something to the error message
 		if (errorMessage)
 		{
-			TransparentShader::OutputShaderErrorMessage(errorMessage, hwnd, vertexShaderFileName);
+			FadeShader::OutputShaderErrorMessage(errorMessage, hwnd, vertexShaderFileName);
 		}
 		//If there was nothing in the error message then it simply could not find the shader file itself
 		else
@@ -89,7 +88,7 @@ bool TransparentShader::InitializeShader(ID3D11Device* device, HWND hwnd, WCHAR*
 		//If the shader failed to compile it should have written something to the error message
 		if (errorMessage)
 		{
-			TransparentShader::OutputShaderErrorMessage(errorMessage, hwnd, pixelShaderFileName);
+			FadeShader::OutputShaderErrorMessage(errorMessage, hwnd, pixelShaderFileName);
 		}
 		//If there was nothing in the error message then it simply could not find the file itself
 		else
@@ -138,7 +137,7 @@ bool TransparentShader::InitializeShader(ID3D11Device* device, HWND hwnd, WCHAR*
 	UINT numElements = sizeof(polygonLayout) / sizeof(polygonLayout[0]);
 
 	//Create the vertex input layout
-	result = device->CreateInputLayout(polygonLayout, numElements, vertexShaderBuffer->GetBufferPointer(), vertexShaderBuffer->GetBufferSize(), &this->m_layout);
+	result = device->CreateInputLayout(polygonLayout, numElements, vertexShaderBuffer->GetBufferPointer(), vertexShaderBuffer->GetBufferSize(), &this->m_inputLayout);
 	if (FAILED(result))
 	{
 		return false;
@@ -155,12 +154,12 @@ bool TransparentShader::InitializeShader(ID3D11Device* device, HWND hwnd, WCHAR*
 	ZeroMemory(&matrixBufferDesc, sizeof(D3D11_BUFFER_DESC));
 
 	//Setup the description of the dynamic matrix constant buffer that is in the vertex shader
-	matrixBufferDesc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
+	matrixBufferDesc.Usage = D3D11_USAGE_DYNAMIC;
 	matrixBufferDesc.ByteWidth = sizeof(MatrixBufferType);
+	matrixBufferDesc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
 	matrixBufferDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
 	matrixBufferDesc.MiscFlags = 0;
 	matrixBufferDesc.StructureByteStride = 0;
-	matrixBufferDesc.Usage = D3D11_USAGE_DYNAMIC;
 
 	//Create the constant buffer pointer so we can access the vertex shader constant buffer from withing this class
 	result = device->CreateBuffer(&matrixBufferDesc, nullptr, &this->m_matrixBuffer);
@@ -169,19 +168,19 @@ bool TransparentShader::InitializeShader(ID3D11Device* device, HWND hwnd, WCHAR*
 		return false;
 	}
 
-	D3D11_BUFFER_DESC transparentBufferDesc;
-	ZeroMemory(&transparentBufferDesc, sizeof(D3D11_BUFFER_DESC));
+	D3D11_BUFFER_DESC fadeBufferDesc;
+	ZeroMemory(&fadeBufferDesc, sizeof(D3D11_BUFFER_DESC));
 
-	//Setup the description of the dynamic matrix constant buffer that is in the vertex shader
-	transparentBufferDesc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
-	transparentBufferDesc.ByteWidth = sizeof(TransparentBufferType);
-	transparentBufferDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
-	transparentBufferDesc.MiscFlags = 0;
-	transparentBufferDesc.StructureByteStride = 0;
-	transparentBufferDesc.Usage = D3D11_USAGE_DYNAMIC;
+	//Setup the description of the dynamic fade constant buffer that is in the vertex shader
+	fadeBufferDesc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
+	fadeBufferDesc.ByteWidth = sizeof(FadeBufferType);
+	fadeBufferDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
+	fadeBufferDesc.MiscFlags = 0;
+	fadeBufferDesc.StructureByteStride = 0;
+	fadeBufferDesc.Usage = D3D11_USAGE_DYNAMIC;
 
-	//Create the constant buffer pointer so we can access the vertex shader constant buffer from withing this class
-	result = device->CreateBuffer(&transparentBufferDesc, nullptr, &this->m_transparentBuffer);
+	//Create the constant buffer pointer so we can access the pixel shader constant buffer from withing this class
+	result = device->CreateBuffer(&fadeBufferDesc, nullptr, &this->m_fadeBuffer);
 	if (FAILED(result))
 	{
 		return false;
@@ -206,7 +205,7 @@ bool TransparentShader::InitializeShader(ID3D11Device* device, HWND hwnd, WCHAR*
 	samplerDesc.MaxLOD = D3D11_FLOAT32_MAX;
 
 	//Create the texture sampler state
-	result = device->CreateSamplerState(&samplerDesc, &this->m_sampleState);
+	result = device->CreateSamplerState(&samplerDesc, &this->m_samplerState);
 	if (FAILED(result))
 	{
 		return false;
@@ -215,21 +214,21 @@ bool TransparentShader::InitializeShader(ID3D11Device* device, HWND hwnd, WCHAR*
 	return true;
 }
 
-void TransparentShader::ShutdownShader()
+void FadeShader::ShutdownShader()
 {
 
 	//Release the SamplerState
-	if (this->m_sampleState)
+	if (this->m_samplerState)
 	{
-		this->m_sampleState->Release();
-		this->m_sampleState = nullptr;
+		this->m_samplerState->Release();
+		this->m_samplerState = nullptr;
 	}
 
-	// Release the Transparent Constant Buffer.
-	if (this->m_transparentBuffer)
+	//Release the Fade Constant Buffer
+	if (this->m_fadeBuffer)
 	{
-		this->m_transparentBuffer->Release();
-		this->m_transparentBuffer = nullptr;
+		this->m_fadeBuffer->Release();
+		this->m_fadeBuffer = nullptr;
 	}
 
 	// Release the Matrix Constant Buffer.
@@ -240,10 +239,10 @@ void TransparentShader::ShutdownShader()
 	}
 
 	// Release the InputLayout.
-	if (this->m_layout)
+	if (this->m_inputLayout)
 	{
-		this->m_layout->Release();
-		this->m_layout = nullptr;
+		this->m_inputLayout->Release();
+		this->m_inputLayout = nullptr;
 	}
 
 	// Release the PixelShader.
@@ -261,7 +260,7 @@ void TransparentShader::ShutdownShader()
 	}
 }
 
-void TransparentShader::OutputShaderErrorMessage(ID3D10Blob* errorMessage, HWND hwnd, WCHAR* shaderFileName)
+void FadeShader::OutputShaderErrorMessage(ID3D10Blob* errorMessage, HWND hwnd, WCHAR* shaderFileName)
 {
 	char* compileErrors;
 	ofstream fOut;
@@ -292,7 +291,7 @@ void TransparentShader::OutputShaderErrorMessage(ID3D10Blob* errorMessage, HWND 
 	MessageBox(hwnd, L"Error compiling shader.  Check shader-error.txt for message.", shaderFileName, MB_OK);
 }
 
-bool TransparentShader::SetShaderParameters(ID3D11DeviceContext* deviceContext, D3DXMATRIX worldMatrix, D3DXMATRIX viewMatrix, D3DXMATRIX projectionMatrix, ID3D11ShaderResourceView* texture, float blendAmount)
+bool FadeShader::SetShaderParameters(ID3D11DeviceContext* deviceContext, D3DXMATRIX worldMatrix, D3DXMATRIX viewMatrix, D3DXMATRIX projectionMatrix, ID3D11ShaderResourceView* texture, float fadeAmount)
 {
 	HRESULT result;
 
@@ -301,18 +300,18 @@ bool TransparentShader::SetShaderParameters(ID3D11DeviceContext* deviceContext, 
 	D3DXMatrixTranspose(&viewMatrix, &viewMatrix);
 	D3DXMatrixTranspose(&projectionMatrix, &projectionMatrix);
 
-	D3D11_MAPPED_SUBRESOURCE mappedSubresource;
+	D3D11_MAPPED_SUBRESOURCE mappedResource;
 	MatrixBufferType* matrixDataPtr;
 
 	//Lock the constant buffer so it can be written to
-	result = deviceContext->Map(this->m_matrixBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedSubresource);
+	result = deviceContext->Map(this->m_matrixBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource);
 	if (FAILED(result))
 	{
 		return false;
 	}
 
 	//Get a pointer to the data in the constant buffer
-	matrixDataPtr = (MatrixBufferType*)mappedSubresource.pData;
+	matrixDataPtr = (MatrixBufferType*)mappedResource.pData;
 
 	//Copy the matrices into the constant buffer
 	matrixDataPtr->world = worldMatrix;
@@ -322,29 +321,29 @@ bool TransparentShader::SetShaderParameters(ID3D11DeviceContext* deviceContext, 
 	//Unlock the constant buffer
 	deviceContext->Unmap(this->m_matrixBuffer, 0);
 
-	TransparentBufferType* transparentDataPtr;
+	FadeBufferType* fadeDataPtr;
 
 	//Lock the constant buffer so it can be written to
-	result = deviceContext->Map(this->m_transparentBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedSubresource);
+	result = deviceContext->Map(this->m_fadeBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource);
 	if (FAILED(result))
 	{
 		return false;
 	}
 
 	//Get a pointer to the data in the constant buffer
-	transparentDataPtr = (TransparentBufferType*)mappedSubresource.pData;
+	fadeDataPtr = (FadeBufferType*)mappedResource.pData;
 
-	// Copy the blentAmount value into the texture Transparent Constant Buffer.
-	transparentDataPtr->blendAmount = blendAmount;
+	//Copy the fadeAmount into the constant buffer
+	fadeDataPtr->fadeAmount = fadeAmount;
 
 	//Unlock the constant buffer
-	deviceContext->Unmap(this->m_transparentBuffer, 0);
+	deviceContext->Unmap(this->m_fadeBuffer, 0);
 
 	//Now set the constant buffer in the vertex shader with the updated values
 	deviceContext->VSSetConstantBuffers(0, 1, &this->m_matrixBuffer);
 
-	//Now set the constant buffer in the vertex shader with the updated values
-	deviceContext->PSSetConstantBuffers(0, 1, &this->m_transparentBuffer);
+	//Now set the constant buffer in the pixel shader with the updated values
+	deviceContext->PSSetConstantBuffers(0, 1, &this->m_fadeBuffer);
 
 	//Set shader texture resource in the pixel shader
 	deviceContext->PSSetShaderResources(0, 1, &texture);
@@ -352,17 +351,17 @@ bool TransparentShader::SetShaderParameters(ID3D11DeviceContext* deviceContext, 
 	return true;
 }
 
-void TransparentShader::RenderShader(ID3D11DeviceContext* deviceContext, int indexCount)
+void FadeShader::RenderShader(ID3D11DeviceContext* deviceContext, int indexCount)
 {
 	//Set the vertex input layout
-	deviceContext->IASetInputLayout(this->m_layout);
+	deviceContext->IASetInputLayout(this->m_inputLayout);
 
 	//Set the vertex and pixel shaders that will be used to render this triangle
 	deviceContext->VSSetShader(this->m_vertexShader, nullptr, 0);
 	deviceContext->PSSetShader(this->m_pixelShader, nullptr, 0);
 
 	//Set the sampler state in the pixel shader
-	deviceContext->PSSetSamplers(0, 1, &this->m_sampleState);
+	deviceContext->PSSetSamplers(0, 1, &this->m_samplerState);
 
 	//Render the triangle
 	deviceContext->DrawIndexed(indexCount, 0, 0);

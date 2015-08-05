@@ -1,8 +1,8 @@
 ////////////////////////////////////////////////////////////////////////////////
-// Filename: ReflectionShader.h
+// Filename: FadeShader.h
 ////////////////////////////////////////////////////////////////////////////////
-#ifndef _REFLECTIONSHADER_H_
-#define _REFLECTIONSHADER_H_
+#ifndef _FADERSHADER_H_
+#define _FADERSHADER_H_
 
 
 //////////////
@@ -15,9 +15,9 @@
 using namespace std;
 
 ////////////////////////////////////////////////////////////////////////////////
-// Class name: ReflectionShader
+// Class name: FadeShader
 ////////////////////////////////////////////////////////////////////////////////
-class ReflectionShader
+class FadeShader
 {
 private:
 	struct MatrixBufferType
@@ -27,33 +27,34 @@ private:
 		D3DXMATRIX projection;
 	};
 
-	struct ReflectionBufferType
+	struct FadeBufferType
 	{
-		D3DXMATRIX reflectionMatrix;
+		float fadeAmount;
+		D3DXVECTOR3 paddding;
 	};
 
 	ID3D11VertexShader* m_vertexShader;
 	ID3D11PixelShader* m_pixelShader;
-	ID3D11InputLayout* m_layout;
-	ID3D11SamplerState* m_sampleState;
+	ID3D11InputLayout* m_inputLayout;
+	ID3D11SamplerState* m_samplerState;
 	ID3D11Buffer* m_matrixBuffer;
-	ID3D11Buffer* m_reflectionBuffer;
+	ID3D11Buffer* m_fadeBuffer;
 
 public:
-	ReflectionShader();
-	ReflectionShader(const ReflectionShader& other);
-	~ReflectionShader();
+	FadeShader();
+	FadeShader(const FadeShader& other);
+	~FadeShader();
 
 	bool Initialize(ID3D11Device* device, HWND hwnd);
 	void Shutdown();
-	bool Render(ID3D11DeviceContext* deviceContext, int indexCount, D3DXMATRIX worldMatrix, D3DXMATRIX viewMatrix, D3DXMATRIX projectionMatrix, ID3D11ShaderResourceView* texture, ID3D11ShaderResourceView* reflectionTexture, D3DXMATRIX reflectionMatrix);
+	bool Render(ID3D11DeviceContext* deviceContext, int indexCount, D3DXMATRIX worldMatrix, D3DXMATRIX viewMatrix, D3DXMATRIX projectionMatrix, ID3D11ShaderResourceView* texture, float fadeAmount);
 
 private:
 	bool InitializeShader(ID3D11Device* device, HWND hwnd, WCHAR* vertexShaderFileName, WCHAR* pixelShaderFileName);
 	void ShutdownShader();
 	void OutputShaderErrorMessage(ID3D10Blob* errorMessage, HWND hwnd, WCHAR* shaderFilename);
 
-	bool SetShaderParameters(ID3D11DeviceContext* deviceContext, D3DXMATRIX worldMatrix, D3DXMATRIX viewMatrix, D3DXMATRIX projectionMatrix, ID3D11ShaderResourceView* texture, ID3D11ShaderResourceView* reflectionTexture, D3DXMATRIX reflectionMatrix);
+	bool SetShaderParameters(ID3D11DeviceContext* deviceContext, D3DXMATRIX worldMatrix, D3DXMATRIX viewMatrix, D3DXMATRIX projectionMatrix, ID3D11ShaderResourceView* texture, float fadeAmount);
 	void RenderShader(ID3D11DeviceContext* deviceContext, int indexCount);
 };
 #endif

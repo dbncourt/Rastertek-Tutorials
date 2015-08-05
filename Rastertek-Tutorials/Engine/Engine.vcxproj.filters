@@ -54,16 +54,19 @@
     <ClInclude Include="Model.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="TransparentShader.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="TextureShader.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="ReflectionShader.h">
+    <ClInclude Include="RenderTexture.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="RenderTexture.h">
+    <ClInclude Include="Bitmap.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="FadeShader.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Timer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -92,16 +95,19 @@
     <ClCompile Include="Model.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="TransparentShader.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="TextureShader.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="ReflectionShader.cpp">
+    <ClCompile Include="RenderTexture.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="RenderTexture.cpp">
+    <ClCompile Include="Bitmap.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="FadeShader.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Timer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -112,17 +118,14 @@
     <FxCompile Include="TexturePixelShader.hlsl">
       <Filter>Resource Files\Shader\Pixel</Filter>
     </FxCompile>
-    <FxCompile Include="ReflectionPixelShader.hlsl">
+    <FxCompile Include="FadePixelShader.hlsl">
       <Filter>Resource Files\Shader\Pixel</Filter>
     </FxCompile>
-    <FxCompile Include="ReflectionVertexShader.hlsl">
+    <FxCompile Include="FadeVertexShader.hlsl">
       <Filter>Resource Files\Shader\Vertex</Filter>
     </FxCompile>
   </ItemGroup>
   <ItemGroup>
-    <Text Include="floor.txt">
-      <Filter>Resource Files\Model</Filter>
-    </Text>
     <Text Include="cube.txt">
       <Filter>Resource Files\Model</Filter>
     </Text>
