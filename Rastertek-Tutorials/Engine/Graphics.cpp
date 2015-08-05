@@ -42,7 +42,7 @@ bool Graphics::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 		return false;
 	}
 
-	//Create the camera object
+	//Create the Camera object
 	this->m_Camera = new Camera();
 	if (!this->m_Camera)
 	{
