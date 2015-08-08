@@ -54,19 +54,19 @@
     <ClInclude Include="Model.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="TextureShader.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="RenderTexture.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Bitmap.h">
+    <ClInclude Include="LightShader.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="FadeShader.h">
+    <ClInclude Include="Light.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Timer.h">
+    <ClInclude Include="RefractionShader.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="WaterShader.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -95,43 +95,67 @@
     <ClCompile Include="Model.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="TextureShader.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="RenderTexture.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Bitmap.cpp">
+    <ClCompile Include="LightShader.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="FadeShader.cpp">
+    <ClCompile Include="Light.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Timer.cpp">
+    <ClCompile Include="RefractionShader.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="WaterShader.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <FxCompile Include="TextureVertexShader.hlsl">
+    <FxCompile Include="LightPixelShader.hlsl">
+      <Filter>Resource Files\Shader\Pixel</Filter>
+    </FxCompile>
+    <FxCompile Include="RefractionPixelShader.hlsl">
+      <Filter>Resource Files\Shader\Pixel</Filter>
+    </FxCompile>
+    <FxCompile Include="WaterPixelShader.hlsl">
+      <Filter>Resource Files\Shader\Pixel</Filter>
+    </FxCompile>
+    <FxCompile Include="LightVertexShader.hlsl">
       <Filter>Resource Files\Shader\Vertex</Filter>
     </FxCompile>
-    <FxCompile Include="TexturePixelShader.hlsl">
-      <Filter>Resource Files\Shader\Pixel</Filter>
+    <FxCompile Include="RefractionVertexShader.hlsl">
+      <Filter>Resource Files\Shader\Vertex</Filter>
     </FxCompile>
-    <FxCompile Include="FadePixelShader.hlsl">
-      <Filter>Resource Files\Shader\Pixel</Filter>
-    </FxCompile>
-    <FxCompile Include="FadeVertexShader.hlsl">
+    <FxCompile Include="WaterVertexShader.hlsl">
       <Filter>Resource Files\Shader\Vertex</Filter>
     </FxCompile>
   </ItemGroup>
   <ItemGroup>
-    <Text Include="cube.txt">
+    <Text Include="ground.txt">
+      <Filter>Resource Files\Model</Filter>
+    </Text>
+    <Text Include="wall.txt">
+      <Filter>Resource Files\Model</Filter>
+    </Text>
+    <Text Include="water.txt">
+      <Filter>Resource Files\Model</Filter>
+    </Text>
+    <Text Include="bath.txt">
       <Filter>Resource Files\Model</Filter>
     </Text>
   </ItemGroup>
   <ItemGroup>
-    <Image Include="seafloor.dds">
+    <Image Include="wall01.dds">
+      <Filter>Resource Files\Texture</Filter>
+    </Image>
+    <Image Include="water01.dds">
+      <Filter>Resource Files\Texture</Filter>
+    </Image>
+    <Image Include="ground01.dds">
+      <Filter>Resource Files\Texture</Filter>
+    </Image>
+    <Image Include="marble01.dds">
       <Filter>Resource Files\Texture</Filter>
     </Image>
   </ItemGroup>

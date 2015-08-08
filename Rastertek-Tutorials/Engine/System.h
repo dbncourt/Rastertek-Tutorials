@@ -16,7 +16,6 @@
 ///////////////////////
 #include "Input.h"
 #include "Graphics.h"
-#include "Timer.h"
 
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -32,7 +31,6 @@ private:
 
 	Input* m_Input;
 	Graphics* m_Graphics;
-	Timer* m_Timer;
 
 public:
 	System();

@@ -8,7 +8,6 @@ System::System()
 {
 	this->m_Input = nullptr;
 	this->m_Graphics = nullptr;
-	this->m_Timer = nullptr;
 }
 
 System::System(const System& other)
@@ -44,7 +43,7 @@ bool System::Initialize()
 	result = this->m_Input->Initialize(this->m_hinstance, this->m_hwnd, screenWidth, screenHeight);
 	if (!result)
 	{
-		MessageBox(this->m_hwnd, L"Could not initialize the Input object", L"Error", MB_OK);
+		MessageBox(this->m_hwnd, L"Could not initialize the input object", L"Error", MB_OK);
 		return false;
 	}
 
@@ -58,25 +57,8 @@ bool System::Initialize()
 	result = this->m_Graphics->Initialize(screenWidth, screenHeight, m_hwnd);
 	if (!result)
 	{
-		MessageBox(this->m_hwnd, L"Could not initialize the Graphics object", L"Error", MB_OK);
 		return false;
 	}
-
-	//Create the Timer object
-	this->m_Timer = new Timer();
-	if (!this->m_Timer)
-	{
-		return false;
-	}
-
-	//Initialize the Timer object
-	result = this->m_Timer->Intialize();
-	if (!result)
-	{
-		MessageBox(this->m_hwnd, L"Could not initialize the Timer object", L"Error", MB_OK);
-		return false;
-	}
-
 	return true;
 }
 
@@ -131,7 +113,7 @@ void System::Run()
 		else
 		{
 			//Otherwise, do the frame processing
-			result = System::Frame();
+			result = Frame();
 			if (!result)
 			{
 				MessageBox(this->m_hwnd, L"Frame Processing Failed", L"Error", MB_OK);
@@ -151,24 +133,21 @@ bool System::Frame()
 {
 	bool result;
 
-	// Update the system stats.
-	this->m_Timer->Frame();
-
-	//Do the input frame processing
+	//Do the Input frame processing
 	result = this->m_Input->Frame();
 	if (!result)
 	{
 		return false;
 	}
 
-	//Do the frame processing for the graphics object
-	result = this->m_Graphics->Frame(this->m_Timer->GetTime());
+	//Do the frame processing for the Graphics object
+	result = this->m_Graphics->Frame();
 	if (!result)
 	{
 		return false;
 	}
 
-	//Finally render the graphics to the screen
+	//Finally render the Graphics to the screen
 	result = this->m_Graphics->Render();
 	if (!result)
 	{
@@ -287,21 +266,21 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT umessage, WPARAM wParam, LPARAM lParam)
 	switch (umessage)
 	{
 		//Check if the window is being destroyed
-	case WM_DESTROY:
-	{
-		PostQuitMessage(0);
-		return 0;
-	}
+		case WM_DESTROY:
+		{
+			PostQuitMessage(0);
+			return 0;
+		}
 		//Check if the window is being closed
-	case WM_CLOSE:
-	{
-		PostQuitMessage(0);
-		return 0;
-	}
+		case WM_CLOSE:
+		{
+			PostQuitMessage(0);
+			return 0;
+		}
 		//All other messages pass to the message handler in the system class
-	default:
-	{
-		return ApplicationHandle->MessageHandler(hwnd, umessage, wParam, lParam);
-	}
+		default:
+		{
+			return ApplicationHandle->MessageHandler(hwnd, umessage, wParam, lParam);
+		}
 	}
 }

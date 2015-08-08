@@ -48,6 +48,9 @@ public:
 	bool Frame();
 
 	bool IsEscapePressed();
+	bool IsLeftArrowPressed();
+	bool IsRightArrowPressed();
+
 	void GetMouseLocation(int& mouseX, int& mouseY);
 
 private:

@@ -220,7 +220,7 @@ bool Model::LoadTexture(ID3D11Device* device, WCHAR* fileName)
 void Model::ReleaseTexture()
 {
 	//Release the texture object
-	if (!this->m_Texture)
+	if (this->m_Texture)
 	{
 		this->m_Texture->Shutdown();
 		delete this->m_Texture;
