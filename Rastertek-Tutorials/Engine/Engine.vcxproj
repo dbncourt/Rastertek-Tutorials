@@ -180,7 +180,7 @@
     </FxCompile>
   </ItemGroup>
   <ItemGroup>
-    <Media Include="sound01.wav" />
+    <Media Include="sound02.wav" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

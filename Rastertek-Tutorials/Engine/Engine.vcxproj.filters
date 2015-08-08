@@ -84,7 +84,7 @@
     </FxCompile>
   </ItemGroup>
   <ItemGroup>
-    <Media Include="sound01.wav">
+    <Media Include="sound02.wav">
       <Filter>Resource Files\Sound</Filter>
     </Media>
   </ItemGroup>

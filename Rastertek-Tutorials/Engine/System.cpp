@@ -44,7 +44,7 @@ bool System::Initialize()
 	result = this->m_Input->Initialize(this->m_hinstance, this->m_hwnd, screenWidth, screenHeight);
 	if (!result)
 	{
-		MessageBox(this->m_hwnd, L"Could not initialize the input object", L"Error", MB_OK);
+		MessageBox(this->m_hwnd, L"Could not initialize the Input object", L"Error", MB_OK);
 		return false;
 	}
 
