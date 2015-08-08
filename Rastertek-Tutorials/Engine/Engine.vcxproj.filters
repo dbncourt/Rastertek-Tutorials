@@ -76,14 +76,6 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <FxCompile Include="FontVertexShader.hlsl">
-      <Filter>Resource Files\Shader\Vertex</Filter>
-    </FxCompile>
-    <FxCompile Include="FontPixelShader.hlsl">
-      <Filter>Resource Files\Shader\Pixel</Filter>
-    </FxCompile>
-  </ItemGroup>
-  <ItemGroup>
     <Media Include="sound01.wav">
       <Filter>Resource Files\Sound</Filter>
     </Media>
