@@ -10,11 +10,9 @@
 #include "Direct3D.h"
 #include "Camera.h"
 #include "Model.h"
-#include "Light.h"
 #include "RenderTexture.h"
-#include "LightShader.h"
-#include "RefractionShader.h"
-#include "WaterShader.h"
+#include "TextureShader.h"
+#include "GlassShader.h"
 
 
 /////////////
@@ -35,18 +33,11 @@ class Graphics
 private:
 	Direct3D* m_Direct3D;
 	Camera* m_Camera;
-	Model* m_GroundModel;
-	Model* m_WallModel;
-	Model* m_BathModel;
-	Model* m_WaterModel;
-	Light* m_Light;
-	RenderTexture* m_RefractionTexture;
-	RenderTexture* m_ReflectionTexture;
-	LightShader* m_LightShader;
-	RefractionShader* m_RefractionShader;
-	WaterShader* m_WaterShader;
-	float m_waterHeight;
-	float m_waterTranslation;
+	Model* m_Model;
+	Model* m_WindowModel;
+	RenderTexture* m_RenderTexture;
+	TextureShader* m_TextureShader;
+	GlassShader* m_GlassShader;
 
 public:
 	Graphics();
@@ -56,11 +47,9 @@ public:
 	bool Initialize(int screenWidth, int screenHeight, HWND hwnd);
 	void Shutdown();
 	bool Frame();
-	bool Render();
 
 private:
-	bool RenderRefractionToTexture();
-	bool RenderReflectionToTexture();
-	bool RenderScene();
+	bool RenderToTexture(float rotation);
+	bool Render(float rotation);
 };
 #endif

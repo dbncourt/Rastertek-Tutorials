@@ -113,7 +113,7 @@ void System::Run()
 		else
 		{
 			//Otherwise, do the frame processing
-			result = Frame();
+			result = System::Frame();
 			if (!result)
 			{
 				MessageBox(this->m_hwnd, L"Frame Processing Failed", L"Error", MB_OK);
@@ -142,13 +142,6 @@ bool System::Frame()
 
 	//Do the frame processing for the Graphics object
 	result = this->m_Graphics->Frame();
-	if (!result)
-	{
-		return false;
-	}
-
-	//Finally render the Graphics to the screen
-	result = this->m_Graphics->Render();
 	if (!result)
 	{
 		return false;
