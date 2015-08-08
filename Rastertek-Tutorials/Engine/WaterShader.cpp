@@ -32,7 +32,7 @@ bool WaterShader::Initialize(ID3D11Device* device, HWND hwnd)
 
 
 	// Initialize the vertex and pixel shaders.
-	result = InitializeShader(device, hwnd, L"WaterVertexShader.hlsl", L"WaterPixelShader.hlsl");
+	result = WaterShader::InitializeShader(device, hwnd, L"WaterVertexShader.hlsl", L"WaterPixelShader.hlsl");
 	if (!result)
 	{
 		return false;
@@ -83,7 +83,7 @@ bool WaterShader::InitializeShader(ID3D11Device* device, HWND hwnd, WCHAR* verte
 		// If the shader failed to compile it should have written something to the error message.
 		if (errorMessage)
 		{
-			OutputShaderErrorMessage(errorMessage, hwnd, vertexShaderFileName);
+			WaterShader::OutputShaderErrorMessage(errorMessage, hwnd, vertexShaderFileName);
 		}
 		// If there was  nothing in the error message then it simply could not find the shader file itself.
 		else
@@ -101,7 +101,7 @@ bool WaterShader::InitializeShader(ID3D11Device* device, HWND hwnd, WCHAR* verte
 		// If the shader failed to compile it should have written something to the error message.
 		if (errorMessage)
 		{
-			OutputShaderErrorMessage(errorMessage, hwnd, pixelShaderFileName);
+			WaterShader::OutputShaderErrorMessage(errorMessage, hwnd, pixelShaderFileName);
 		}
 		// If there was  nothing in the error message then it simply could not find the file itself.
 		else

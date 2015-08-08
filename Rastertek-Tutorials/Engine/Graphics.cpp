@@ -135,7 +135,7 @@ bool Graphics::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 
 	// Initialize the Refraction RenderTexture object.
 	result = this->m_RefractionTexture->Initialize(this->m_Direct3D->GetDevice(), screenWidth, screenHeight);
-	if (FAILED(result))
+	if (!result)
 	{
 		MessageBox(hwnd, L"Could not initialize the Refraction RenderTexture object.", L"Error", MB_OK);
 		return false;
@@ -150,7 +150,7 @@ bool Graphics::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 
 	// Initialize the Reflection RenderTexture object.
 	result = this->m_ReflectionTexture->Initialize(this->m_Direct3D->GetDevice(), screenWidth, screenHeight);
-	if (FAILED(result))
+	if (!result)
 	{
 		MessageBox(hwnd, L"Could not initialize the Reflection RenderTexture object.", L"Error", MB_OK);
 		return false;
