@@ -1,37 +1,38 @@
 ////////////////////////////////////////////////////////////////////////////////
-// Filename: GlassShader.cpp
+// Filename: FireShader.cpp
 ////////////////////////////////////////////////////////////////////////////////
-#include "GlassShader.h"
+#include "FireShader.h"
 
 
-GlassShader::GlassShader()
+FireShader::FireShader()
 {
-	this->m_vertexShader = 0;
-	this->m_pixelShader = 0;
-	this->m_inputLayout = 0;
-	this->m_samplerState = 0;
-	this->m_matrixBuffer = 0;
-	this->m_glassBuffer = 0;
+	this->m_vertexShader = nullptr;
+	this->m_pixelShader = nullptr;
+	this->m_inputLayout = nullptr;
+	this->m_samplerState = nullptr;
+	this->m_samplerState2 = nullptr;
+	this->m_matrixBuffer = nullptr;
+	this->m_noiseBuffer = nullptr;
+	this->m_distortionBuffer = nullptr;
 }
 
 
-GlassShader::GlassShader(const GlassShader& other)
-{
-}
-
-
-GlassShader::~GlassShader()
+FireShader::FireShader(const FireShader& other)
 {
 }
 
 
-bool GlassShader::Initialize(ID3D11Device* device, HWND hwnd)
+FireShader::~FireShader()
+{
+}
+
+
+bool FireShader::Initialize(ID3D11Device* device, HWND hwnd)
 {
 	bool result;
 
-
 	// Initialize the vertex and pixel shaders.
-	result = GlassShader::InitializeShader(device, hwnd, L"GlassVertexShader.hlsl", L"GlassPixelShader.hlsl");
+	result = FireShader::InitializeShader(device, hwnd, L"FireVertexShader.hlsl", L"FirePixelShader.hlsl");
 	if (!result)
 	{
 		return false;
@@ -41,33 +42,33 @@ bool GlassShader::Initialize(ID3D11Device* device, HWND hwnd)
 }
 
 
-void GlassShader::Shutdown()
+void FireShader::Shutdown()
 {
 	// Shutdown the vertex and pixel shaders as well as the related objects.
-	GlassShader::ShutdownShader();
+	FireShader::ShutdownShader();
 }
 
 
-bool GlassShader::Render(ID3D11DeviceContext* deviceContext, int indexCount, D3DXMATRIX worldMatrix, D3DXMATRIX viewMatrix, D3DXMATRIX projectionMatrix, ID3D11ShaderResourceView* colorTexture, ID3D11ShaderResourceView* normalTexture, ID3D11ShaderResourceView* refractionTexture, float refractionScale)
+bool FireShader::Render(ID3D11DeviceContext* deviceContext, int indexCount, D3DXMATRIX worldMatrix, D3DXMATRIX viewMatrix, D3DXMATRIX projectionMatrix, ID3D11ShaderResourceView* fireTexture, ID3D11ShaderResourceView* noiseTexture, ID3D11ShaderResourceView* alphaTexture, float frameTime, D3DXVECTOR3 scrollSpeeds, D3DXVECTOR3 scales, D3DXVECTOR2 distortion1, D3DXVECTOR2 distortion2, D3DXVECTOR2 distortion3, float distortionScale, float distortionBias)
 {
 	bool result;
 
 
 	// Set the shader parameters that it will use for rendering.
-	result = GlassShader::SetShaderParameters(deviceContext, worldMatrix, viewMatrix, projectionMatrix, colorTexture, normalTexture, refractionTexture, refractionScale);
+	result = FireShader::SetShaderParameters(deviceContext, worldMatrix, viewMatrix, projectionMatrix, fireTexture, noiseTexture, alphaTexture, frameTime, scrollSpeeds, scales, distortion1, distortion2, distortion3, distortionScale, distortionBias);
 	if (!result)
 	{
 		return false;
 	}
 
 	// Now render the prepared buffers with the shader.
-	GlassShader::RenderShader(deviceContext, indexCount);
+	FireShader::RenderShader(deviceContext, indexCount);
 
 	return true;
 }
 
 
-bool GlassShader::InitializeShader(ID3D11Device* device, HWND hwnd, WCHAR* vertexShaderFileName, WCHAR* pixelShaderFileName)
+bool FireShader::InitializeShader(ID3D11Device* device, HWND hwnd, WCHAR* vertexShaderFileName, WCHAR* pixelShaderFileName)
 {
 	HRESULT result;
 
@@ -82,7 +83,7 @@ bool GlassShader::InitializeShader(ID3D11Device* device, HWND hwnd, WCHAR* verte
 		// If the shader failed to compile it should have written something to the error message.
 		if (errorMessage)
 		{
-			GlassShader::OutputShaderErrorMessage(errorMessage, hwnd, vertexShaderFileName);
+			FireShader::OutputShaderErrorMessage(errorMessage, hwnd, vertexShaderFileName);
 		}
 		// If there was  nothing in the error message then it simply could not find the shader file itself.
 		else
@@ -100,7 +101,7 @@ bool GlassShader::InitializeShader(ID3D11Device* device, HWND hwnd, WCHAR* verte
 		// If the shader failed to compile it should have written something to the error message.
 		if (errorMessage)
 		{
-			GlassShader::OutputShaderErrorMessage(errorMessage, hwnd, pixelShaderFileName);
+			FireShader::OutputShaderErrorMessage(errorMessage, hwnd, pixelShaderFileName);
 		}
 		// If there was  nothing in the error message then it simply could not find the file itself.
 		else
@@ -188,6 +189,31 @@ bool GlassShader::InitializeShader(ID3D11Device* device, HWND hwnd, WCHAR* verte
 		return false;
 	}
 
+	D3D11_SAMPLER_DESC samplerDesc2;
+	ZeroMemory(&samplerDesc2, sizeof(D3D11_SAMPLER_DESC));
+
+	// Create a texture sampler state description.
+	samplerDesc2.AddressU = D3D11_TEXTURE_ADDRESS_CLAMP;
+	samplerDesc2.AddressV = D3D11_TEXTURE_ADDRESS_CLAMP;
+	samplerDesc2.AddressW = D3D11_TEXTURE_ADDRESS_CLAMP;
+	samplerDesc2.BorderColor[0] = 0;
+	samplerDesc2.BorderColor[1] = 0;
+	samplerDesc2.BorderColor[2] = 0;
+	samplerDesc2.BorderColor[3] = 0;
+	samplerDesc2.ComparisonFunc = D3D11_COMPARISON_ALWAYS;
+	samplerDesc2.Filter = D3D11_FILTER_MIN_MAG_MIP_LINEAR;
+	samplerDesc2.MaxAnisotropy = 1;
+	samplerDesc2.MaxLOD = D3D11_FLOAT32_MAX;
+	samplerDesc2.MinLOD = 0;
+	samplerDesc2.MipLODBias = 0.0f;
+
+	// Create the texture sampler state.
+	result = device->CreateSamplerState(&samplerDesc2, &this->m_samplerState2);
+	if (FAILED(result))
+	{
+		return false;
+	}
+
 	D3D11_BUFFER_DESC matrixBufferDesc;
 	ZeroMemory(&matrixBufferDesc, sizeof(D3D11_BUFFER_DESC));
 
@@ -206,19 +232,37 @@ bool GlassShader::InitializeShader(ID3D11Device* device, HWND hwnd, WCHAR* verte
 		return false;
 	}
 
-	D3D11_BUFFER_DESC glassBufferDesc;
-	ZeroMemory(&glassBufferDesc, sizeof(D3D11_BUFFER_DESC));
+	D3D11_BUFFER_DESC noiseBufferDesc;
+	ZeroMemory(&noiseBufferDesc, sizeof(D3D11_BUFFER_DESC));
 
-	// Setup the description of the reflection dynamic constant buffer that is in the vertex shader.
-	glassBufferDesc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
-	glassBufferDesc.ByteWidth = sizeof(GlassBufferType);
-	glassBufferDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
-	glassBufferDesc.MiscFlags = 0;
-	glassBufferDesc.StructureByteStride = 0;
-	glassBufferDesc.Usage = D3D11_USAGE_DYNAMIC;
+	// Setup the description of the noise dynamic constant buffer that is in the vertex shader.
+	noiseBufferDesc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
+	noiseBufferDesc.ByteWidth = sizeof(NoiseBufferType);
+	noiseBufferDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
+	noiseBufferDesc.MiscFlags = 0;
+	noiseBufferDesc.StructureByteStride = 0;
+	noiseBufferDesc.Usage = D3D11_USAGE_DYNAMIC;
 
 	// Create the constant buffer pointer so we can access the vertex shader constant buffer from within this class.
-	result = device->CreateBuffer(&glassBufferDesc, nullptr, &this->m_glassBuffer);
+	result = device->CreateBuffer(&noiseBufferDesc, nullptr, &this->m_noiseBuffer);
+	if (FAILED(result))
+	{
+		return false;
+	}
+
+	D3D11_BUFFER_DESC distortionBufferDesc;
+	ZeroMemory(&noiseBufferDesc, sizeof(D3D11_BUFFER_DESC));
+
+	// Setup the description of the distortion dynamic constant buffer that is in the vertex shader.
+	distortionBufferDesc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
+	distortionBufferDesc.ByteWidth = sizeof(DistortionBufferType);
+	distortionBufferDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
+	distortionBufferDesc.MiscFlags = 0;
+	distortionBufferDesc.StructureByteStride = 0;
+	distortionBufferDesc.Usage = D3D11_USAGE_DYNAMIC;
+
+	// Create the constant buffer pointer so we can access the vertex shader constant buffer from within this class.
+	result = device->CreateBuffer(&distortionBufferDesc, nullptr, &this->m_distortionBuffer);
 	if (FAILED(result))
 	{
 		return false;
@@ -228,13 +272,20 @@ bool GlassShader::InitializeShader(ID3D11Device* device, HWND hwnd, WCHAR* verte
 }
 
 
-void GlassShader::ShutdownShader()
+void FireShader::ShutdownShader()
 {
-	// Release the GlassConstantBuffer.
-	if (this->m_glassBuffer)
+	// Release the DistortionConstantBuffer.
+	if (this->m_distortionBuffer)
 	{
-		this->m_glassBuffer->Release();
-		this->m_glassBuffer = nullptr;
+		this->m_distortionBuffer->Release();
+		this->m_distortionBuffer = nullptr;
+	}
+
+	// Release the NoiseConstantBuffer.
+	if (this->m_noiseBuffer)
+	{
+		this->m_noiseBuffer->Release();
+		this->m_noiseBuffer = nullptr;
 	}
 
 	// Release the MatrixConstantBuffer.
@@ -249,6 +300,13 @@ void GlassShader::ShutdownShader()
 	{
 		this->m_samplerState->Release();
 		this->m_samplerState = nullptr;
+	}
+
+	// Release the SamplerState2.
+	if (this->m_samplerState2)
+	{
+		this->m_samplerState2->Release();
+		this->m_samplerState2 = nullptr;
 	}
 
 	// Release the InputLayout
@@ -274,7 +332,7 @@ void GlassShader::ShutdownShader()
 }
 
 
-void GlassShader::OutputShaderErrorMessage(ID3D10Blob* errorMessage, HWND hwnd, WCHAR* shaderFileName)
+void FireShader::OutputShaderErrorMessage(ID3D10Blob* errorMessage, HWND hwnd, WCHAR* shaderFileName)
 {
 	char* compileErrors;
 	ofstream fOut;
@@ -306,7 +364,7 @@ void GlassShader::OutputShaderErrorMessage(ID3D10Blob* errorMessage, HWND hwnd, 
 }
 
 
-bool GlassShader::SetShaderParameters(ID3D11DeviceContext* deviceContext, D3DXMATRIX worldMatrix, D3DXMATRIX viewMatrix, D3DXMATRIX projectionMatrix, ID3D11ShaderResourceView* colorTexture, ID3D11ShaderResourceView* normalTexture, ID3D11ShaderResourceView* refractionTexture, float refractionScale)
+bool FireShader::SetShaderParameters(ID3D11DeviceContext* deviceContext, D3DXMATRIX worldMatrix, D3DXMATRIX viewMatrix, D3DXMATRIX projectionMatrix, ID3D11ShaderResourceView* fireTexture, ID3D11ShaderResourceView* noiseTexture, ID3D11ShaderResourceView* alphaTexture, float frameTime, D3DXVECTOR3 scrollSpeeds, D3DXVECTOR3 scales, D3DXVECTOR2 distortion1, D3DXVECTOR2 distortion2, D3DXVECTOR2 distortion3, float distortionScale, float distortionBias)
 {
 	HRESULT result;
 
@@ -318,7 +376,7 @@ bool GlassShader::SetShaderParameters(ID3D11DeviceContext* deviceContext, D3DXMA
 	D3D11_MAPPED_SUBRESOURCE mappedSubresource;
 	MatrixBufferType* matrixDataPtr;
 
-	// Lock the matrix constant buffer so it can be written to.
+	// Lock the Matrix constant buffer so it can be written to.
 	result = deviceContext->Map(this->m_matrixBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedSubresource);
 	if (FAILED(result))
 	{
@@ -336,44 +394,71 @@ bool GlassShader::SetShaderParameters(ID3D11DeviceContext* deviceContext, D3DXMA
 	// Unlock the matrix constant buffer.
 	deviceContext->Unmap(this->m_matrixBuffer, 0);
 
-	GlassBufferType* glassDataPtr;
+	NoiseBufferType* noiseDataPtr;
 
-	// Lock the Glass constant buffer so it can be written to.
-	result = deviceContext->Map(this->m_glassBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedSubresource);
+	// Lock the Noise constant buffer so it can be written to.
+	result = deviceContext->Map(this->m_noiseBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedSubresource);
 	if (FAILED(result))
 	{
 		return false;
 	}
 
 	// Get a pointer to the data in the constant buffer.
-	glassDataPtr = (GlassBufferType*)mappedSubresource.pData;
+	noiseDataPtr = (NoiseBufferType*)mappedSubresource.pData;
 
-	// Copy the refractionScale into the constant buffer.
-	glassDataPtr->refractionScale = refractionScale;
+	// Copy the Noise into the constant buffer.
+	noiseDataPtr->frameTime = frameTime;
+	noiseDataPtr->scales = scales;
+	noiseDataPtr->scrollSpeeds = scrollSpeeds;
 
 	// Unlock the constant buffer.
-	deviceContext->Unmap(this->m_glassBuffer, 0);
+	deviceContext->Unmap(this->m_noiseBuffer, 0);
+
+	DistortionBufferType* distortionDataPtr;
+
+	// Lock the Distortion constant buffer so it can be written to.
+	result = deviceContext->Map(this->m_distortionBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedSubresource);
+	if (FAILED(result))
+	{
+		return false;
+	}
+
+	// Get a pointer to the data in the constant buffer.
+	distortionDataPtr = (DistortionBufferType*)mappedSubresource.pData;
+
+	// Copy the Distortion into the constant buffer.
+	distortionDataPtr->distortion1 = distortion1;
+	distortionDataPtr->distortion2 = distortion2;
+	distortionDataPtr->distortion3 = distortion3;
+	distortionDataPtr->distortionBias = distortionBias;
+	distortionDataPtr->distortionScale = distortionScale;
+
+	// Unlock the constant buffer.
+	deviceContext->Unmap(this->m_distortionBuffer, 0);
 
 	// Now set the matrix constant buffer in the vertex shader with the updated values.
 	deviceContext->VSSetConstantBuffers(0, 1, &this->m_matrixBuffer);
 
-	// Finally set the water constant buffer in the pixel shader with the updated values.
-	deviceContext->PSSetConstantBuffers(0, 1, &this->m_glassBuffer);
+	// Now set the noise constant buffer in the vertex shader with the updated values.
+	deviceContext->VSSetConstantBuffers(1, 1, &this->m_noiseBuffer);
+
+	// Finally set the distortion constant buffer in the pixel shader with the updated values.
+	deviceContext->PSSetConstantBuffers(0, 1, &this->m_distortionBuffer);
 
 	// Set the reflection texture resource in the pixel shader.
-	deviceContext->PSSetShaderResources(0, 1, &colorTexture);
+	deviceContext->PSSetShaderResources(0, 1, &fireTexture);
 
 	// Set the refraction texture resource in the pixel shader.
-	deviceContext->PSSetShaderResources(1, 1, &normalTexture);
+	deviceContext->PSSetShaderResources(1, 1, &noiseTexture);
 
 	// Set the normal map texture resource in the pixel shader.
-	deviceContext->PSSetShaderResources(2, 1, &refractionTexture);
+	deviceContext->PSSetShaderResources(2, 1, &alphaTexture);
 
 	return true;
 }
 
 
-void GlassShader::RenderShader(ID3D11DeviceContext* deviceContext, int indexCount)
+void FireShader::RenderShader(ID3D11DeviceContext* deviceContext, int indexCount)
 {
 	// Set the vertex input layout.
 	deviceContext->IASetInputLayout(this->m_inputLayout);
@@ -384,6 +469,7 @@ void GlassShader::RenderShader(ID3D11DeviceContext* deviceContext, int indexCoun
 
 	// Set the sampler state in the pixel shader.
 	deviceContext->PSSetSamplers(0, 1, &this->m_samplerState);
+	deviceContext->PSSetSamplers(1, 1, &this->m_samplerState2);
 
 	// Render the triangles.
 	deviceContext->DrawIndexed(indexCount, 0, 0);

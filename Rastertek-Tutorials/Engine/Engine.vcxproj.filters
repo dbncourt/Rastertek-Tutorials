@@ -54,13 +54,7 @@
     <ClInclude Include="Model.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="RenderTexture.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="GlassShader.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="TextureShader.h">
+    <ClInclude Include="FireShader.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -89,51 +83,30 @@
     <ClCompile Include="Model.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="RenderTexture.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="GlassShader.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="TextureShader.cpp">
+    <ClCompile Include="FireShader.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <FxCompile Include="GlassPixelShader.hlsl">
+    <FxCompile Include="FirePixelShader.hlsl">
       <Filter>Resource Files\Shader\Pixel</Filter>
     </FxCompile>
-    <FxCompile Include="GlassVertexShader.hlsl">
+    <FxCompile Include="FireVertexShader.hlsl">
       <Filter>Resource Files\Shader\Vertex</Filter>
-    </FxCompile>
-    <FxCompile Include="TextureVertexShader.hlsl">
-      <Filter>Resource Files\Shader\Vertex</Filter>
-    </FxCompile>
-    <FxCompile Include="TexturePixelShader.hlsl">
-      <Filter>Resource Files\Shader\Pixel</Filter>
     </FxCompile>
   </ItemGroup>
   <ItemGroup>
-    <Image Include="bump03.dds">
+    <Image Include="alpha01.dds">
       <Filter>Resource Files\Texture</Filter>
     </Image>
-    <Image Include="glass01.dds">
+    <Image Include="fire01.dds">
       <Filter>Resource Files\Texture</Filter>
     </Image>
-    <Image Include="ice01.dds">
-      <Filter>Resource Files\Texture</Filter>
-    </Image>
-    <Image Include="icebump01.dds">
-      <Filter>Resource Files\Texture</Filter>
-    </Image>
-    <Image Include="seafloor.dds">
+    <Image Include="noise01.dds">
       <Filter>Resource Files\Texture</Filter>
     </Image>
   </ItemGroup>
   <ItemGroup>
-    <Text Include="cube.txt">
-      <Filter>Resource Files\Model</Filter>
-    </Text>
     <Text Include="square.txt">
       <Filter>Resource Files\Model</Filter>
     </Text>
