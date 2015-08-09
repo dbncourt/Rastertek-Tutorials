@@ -151,32 +151,30 @@
   <ItemGroup>
     <ClInclude Include="Camera.h" />
     <ClInclude Include="Direct3D.h" />
-    <ClInclude Include="FireShader.h" />
+    <ClInclude Include="DepthShader.h" />
     <ClInclude Include="Graphics.h" />
     <ClInclude Include="Input.h" />
     <ClInclude Include="Model.h" />
     <ClInclude Include="System.h" />
-    <ClInclude Include="Texture.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="Direct3D.cpp" />
-    <ClCompile Include="FireShader.cpp" />
+    <ClCompile Include="DepthShader.cpp" />
     <ClCompile Include="Graphics.cpp" />
     <ClCompile Include="Input.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Model.cpp" />
     <ClCompile Include="System.cpp" />
-    <ClCompile Include="Texture.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <FxCompile Include="FirePixelShader.hlsl">
+    <FxCompile Include="DepthPixelShader.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Pixel</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
     </FxCompile>
-    <FxCompile Include="FireVertexShader.hlsl">
+    <FxCompile Include="DepthVertexShader.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Vertex</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Vertex</ShaderType>
@@ -184,12 +182,7 @@
     </FxCompile>
   </ItemGroup>
   <ItemGroup>
-    <Image Include="alpha01.dds" />
-    <Image Include="fire01.dds" />
-    <Image Include="noise01.dds" />
-  </ItemGroup>
-  <ItemGroup>
-    <Text Include="square.txt" />
+    <Text Include="floor.txt" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

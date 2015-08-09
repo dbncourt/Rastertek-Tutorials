@@ -48,13 +48,10 @@
     <ClInclude Include="Camera.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Texture.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Model.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="FireShader.h">
+    <ClInclude Include="DepthShader.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -77,37 +74,23 @@
     <ClCompile Include="Camera.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Texture.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Model.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="FireShader.cpp">
+    <ClCompile Include="DepthShader.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <FxCompile Include="FirePixelShader.hlsl">
+    <FxCompile Include="DepthPixelShader.hlsl">
       <Filter>Resource Files\Shader\Pixel</Filter>
     </FxCompile>
-    <FxCompile Include="FireVertexShader.hlsl">
+    <FxCompile Include="DepthVertexShader.hlsl">
       <Filter>Resource Files\Shader\Vertex</Filter>
     </FxCompile>
   </ItemGroup>
   <ItemGroup>
-    <Image Include="alpha01.dds">
-      <Filter>Resource Files\Texture</Filter>
-    </Image>
-    <Image Include="fire01.dds">
-      <Filter>Resource Files\Texture</Filter>
-    </Image>
-    <Image Include="noise01.dds">
-      <Filter>Resource Files\Texture</Filter>
-    </Image>
-  </ItemGroup>
-  <ItemGroup>
-    <Text Include="square.txt">
+    <Text Include="floor.txt">
       <Filter>Resource Files\Model</Filter>
     </Text>
   </ItemGroup>

@@ -10,7 +10,7 @@
 #include "Direct3D.h"
 #include "Camera.h"
 #include "Model.h"
-#include "FireShader.h"
+#include "DepthShader.h"
 
 
 /////////////
@@ -18,8 +18,8 @@
 /////////////
 const bool FULL_SCREEN = false;
 const bool VSYNC_ENABLED = true;
-const float SCREEN_DEPTH = 1000.0f;
-const float SCREEN_NEAR = 0.1f;
+const float SCREEN_DEPTH = 100.0f;
+const float SCREEN_NEAR = 1.0f;
 
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -32,7 +32,7 @@ private:
 	Direct3D* m_Direct3D;
 	Camera* m_Camera;
 	Model* m_Model;
-	FireShader* m_FireShader;
+	DepthShader* m_DepthShader;
 
 public:
 	Graphics();
