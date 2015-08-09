@@ -34,43 +34,44 @@ bool System::Initialize()
 	//Initialize the windows API
 	System::InitializeWindows(screenWidth, screenHeight);
 
-	//Create the input object. This object will be used to handle reading the keyboard input from the user
+	//Create the Input object. This object will be used to handle reading the keyboard input from the user
 	this->m_Input = new Input();
 	if (!this->m_Input)
 	{
 		return false;
 	}
 
-	//Initialize the input object
+	//Initialize the Input object
 	result = this->m_Input->Initialize(this->m_hinstance, this->m_hwnd, screenWidth, screenHeight);
 	if (!result)
 	{
-		MessageBox(this->m_hwnd, L"Could not initialize the input object", L"Error", MB_OK);
+		MessageBox(this->m_hwnd, L"Could not initialize the Input object", L"Error", MB_OK);
 		return false;
 	}
 
-	//Create the graphics object. This object will handle rendering all the graphics for this application
+	//Create the Graphics object. This object will handle rendering all the graphics for this application
 	this->m_Graphics = new Graphics();
 	if (!this->m_Graphics)
 	{
 		return false;
 	}
-	
-	//Initialize the graphics object
-	result = this->m_Graphics->Initialize(screenWidth, screenHeight, this->m_hwnd);
+
+	//Initialize the Graphics object
+	result = this->m_Graphics->Initialize(screenWidth, screenHeight, m_hwnd);
 	if (!result)
 	{
+		MessageBox(this->m_hwnd, L"Could not initialize the Graphics object", L"Error", MB_OK);
 		return false;
 	}
 
-	//Create the Timer object
+	// Create the Timer object.
 	this->m_Timer = new Timer();
 	if (!this->m_Timer)
 	{
 		return false;
 	}
 
-	//Initialize the Timer object
+	// Initialize the Timer object.
 	result = this->m_Timer->Intialize();
 	if (!result)
 	{
@@ -78,26 +79,29 @@ bool System::Initialize()
 		return false;
 	}
 
-	//Create the Position object
+	// Create the Position object.
 	this->m_Position = new Position();
 	if (!this->m_Position)
 	{
 		return false;
 	}
 
+	// Initialize the Position of the viewer.
+	this->m_Position->SetPosition(D3DXVECTOR3(0.0f, 1.5f, -11.0f));
+
 	return true;
 }
 
 void System::Shutdown()
 {
-	//Release the Position object
+	// Release the Position object.
 	if (this->m_Position)
 	{
 		delete this->m_Position;
 		this->m_Position = nullptr;
 	}
 
-	//Release the Timer object
+	// Release the Timer object.
 	if (this->m_Timer)
 	{
 		delete this->m_Timer;
@@ -112,7 +116,7 @@ void System::Shutdown()
 		this->m_Graphics = nullptr;
 	}
 
-	//Release the input object
+	//Release the Input object
 	if (this->m_Input)
 	{
 		this->m_Input->Shutdown();
@@ -156,15 +160,8 @@ void System::Run()
 			result = System::Frame();
 			if (!result)
 			{
-				MessageBox(this->m_hwnd, L"Frame Processing Failed", L"Error", MB_OK);
 				done = true;
 			}
-		}
-
-		//Check if the user pressed escape and wants to quit
-		if (this->m_Input->IsEscapePressed())
-		{
-			done = true;
 		}
 	}
 }
@@ -173,41 +170,36 @@ bool System::Frame()
 {
 	bool result;
 
-
-	//Update the system stats
+	// Update the system stats.
 	this->m_Timer->Frame();
 
-	//Do the input frame processing
+	//Do the Input frame processing
 	result = this->m_Input->Frame();
 	if (!result)
 	{
 		return false;
 	}
 
-	//Set the frame time for calculating the updated position
-	this->m_Position->SetFrameTime(this->m_Timer->GetTime());
-
-	bool keyDown;
-	//Check if the left or right arrow key has been pressed, if so rotate the camera accordingly
-	keyDown = this->m_Input->IsLeftArrowPressed();
-	this->m_Position->TurnLeft(keyDown);
-
-	keyDown = this->m_Input->IsRightArrowPressed();
-	this->m_Position->TurnRight(keyDown);
-
-	//Get the current view point rotation
-	float yRotation;
-	this->m_Position->GetRotation(yRotation);
-
-	//Do the frame processing for the graphics object
-	result = this->m_Graphics->Frame(yRotation);
-	if (!result)
+	// Check if the user pressed escape and wants to exit the application
+	if (this->m_Input->IsEscapePressed())
 	{
 		return false;
 	}
 
-	//Finally render the graphics to the screen
-	result = this->m_Graphics->Render();
+	// Set the frame time for calculating the update position.
+	this->m_Position->SetFrameTime(this->m_Timer->GetTime());
+
+	// Handle the Input.
+	this->m_Position->MoveLeft(this->m_Input->IsLeftArrowPressed());
+
+	this->m_Position->MoveRight(this->m_Input->IsRightArrowPressed());
+
+	// Get the view point position / rotation.
+	D3DXVECTOR3 position;
+	this->m_Position->GetPosition(position);
+
+	//Do the frame processing for the Graphics object
+	result = this->m_Graphics->Frame(position);
 	if (!result)
 	{
 		return false;
