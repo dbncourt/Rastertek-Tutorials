@@ -342,18 +342,17 @@ bool Direct3D::Initialize(int screenWidth, int screenHeight, bool vsync, HWND hw
 	this->m_deviceContext->RSSetState(this->m_rasterizerState);
 
 	//Setup the viewport for rendering
-	D3D11_VIEWPORT viewport;
-	ZeroMemory(&viewport, sizeof(D3D11_VIEWPORT));
+	ZeroMemory(&m_viewport, sizeof(D3D11_VIEWPORT));
 
-	viewport.Width = (float)screenWidth;
-	viewport.Height = (float)screenHeight;
-	viewport.MinDepth = 0.0f;
-	viewport.MaxDepth = 1.0f;
-	viewport.TopLeftX = 0.0f;
-	viewport.TopLeftY = 0.0f;
+	m_viewport.Width = (float)screenWidth;
+	m_viewport.Height = (float)screenHeight;
+	m_viewport.MinDepth = 0.0f;
+	m_viewport.MaxDepth = 1.0f;
+	m_viewport.TopLeftX = 0.0f;
+	m_viewport.TopLeftY = 0.0f;
 
 	//Create the viewport
-	this->m_deviceContext->RSSetViewports(1, &viewport);
+	this->m_deviceContext->RSSetViewports(1, &m_viewport);
 
 	//Setup the projection matrix
 	float fieldOfView = (float)D3DX_PI / 4.0f;
@@ -585,4 +584,10 @@ void Direct3D::SetBackBufferRenderTarget()
 {
 	// Bind the render target view and depth stencil buffer to the output render pipeline.
 	this->m_deviceContext->OMSetRenderTargets(1, &this->m_renderTargetView, this->m_depthStencilView);
+}
+
+void Direct3D::ResetViewport()
+{
+	// Set the viewport.
+	this->m_deviceContext->RSSetViewports(1, &this->m_viewport);
 }

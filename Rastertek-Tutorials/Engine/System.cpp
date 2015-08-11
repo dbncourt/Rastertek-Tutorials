@@ -154,13 +154,6 @@ bool System::Frame()
 		return false;
 	}
 
-	//Finally render the graphics to the screen
-	result = this->m_Graphics->Render();
-	if (!result)
-	{
-		return false;
-	}
-
 	return true;
 }
 

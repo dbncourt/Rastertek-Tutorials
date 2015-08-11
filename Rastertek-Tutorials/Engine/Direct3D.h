@@ -43,6 +43,7 @@ private:
 	D3DXMATRIX m_orthoMatrix;
 	ID3D11BlendState* m_alphaEnableBlendingState;
 	ID3D11BlendState* m_alphaDisableBlendingState;
+	D3D11_VIEWPORT m_viewport;
 
 public:
 	Direct3D();
@@ -71,6 +72,8 @@ public:
 	void TurnOffAlphaBlending();
 
 	ID3D11DepthStencilView* GetDepthStencilView();
+	
 	void SetBackBufferRenderTarget();
+	void ResetViewport();
 };
 #endif

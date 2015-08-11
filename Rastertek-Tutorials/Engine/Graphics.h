@@ -1,8 +1,9 @@
 ////////////////////////////////////////////////////////////////////////////////
-// Filename: Graphics.h
+// Filename: GraphicsClass.h
 ////////////////////////////////////////////////////////////////////////////////
 #ifndef _GRAPHICS_H_
 #define _GRAPHICS_H_
+
 
 ///////////////////////
 // MY CLASS INCLUDES //
@@ -10,11 +11,11 @@
 #include "Direct3D.h"
 #include "Camera.h"
 #include "Model.h"
-#include "LightShader.h"
-#include "Light.h"
-#include "RenderTexture.h"
-#include "DebugWindow.h"
 #include "TextureShader.h"
+#include "HorizontalBlurShader.h"
+#include "VerticalBlurShader.h"
+#include "RenderTexture.h"
+#include "OrthoWindow.h"
 
 
 /////////////
@@ -31,16 +32,20 @@ const float SCREEN_NEAR = 0.1f;
 ////////////////////////////////////////////////////////////////////////////////
 class Graphics
 {
-
 private:
 	Direct3D* m_Direct3D;
 	Camera* m_Camera;
 	Model* m_Model;
-	LightShader* m_LightShader;
-	Light* m_Light;
-	RenderTexture* m_RenderTexture;
-	DebugWindow* m_DebugWindow;
 	TextureShader* m_TextureShader;
+	HorizontalBlurShader* m_HorizontalBlurShader;
+	VerticalBlurShader* m_VerticalBlurShader;
+	RenderTexture *m_RenderTexture;
+	RenderTexture *m_DownSampleTexture;
+	RenderTexture *m_HorizontalBlurTexture;
+	RenderTexture *m_VerticalBlurTexture;
+	RenderTexture *m_UpSampleTexture;
+	OrthoWindow *m_SmallWindow;
+	OrthoWindow* m_FullScreenWindow;
 
 public:
 	Graphics();
@@ -49,12 +54,17 @@ public:
 
 	bool Initialize(int screenWidth, int screenHeight, HWND hwnd);
 	void Shutdown();
-
 	bool Frame();
-	bool Render();
 
 private:
-	bool RenderToTexture();
-	bool RenderScene();
+	bool Render(float rotation);
+
+	bool RenderSceneToTexture(float rotation);
+	bool DownSampleTexture();
+	bool RenderHorizontalBlurToTexture();
+	bool RenderVerticalBlurToTexture();
+	bool UpSampleTexture();
+	bool Render2DTextureScene();
 };
+
 #endif
