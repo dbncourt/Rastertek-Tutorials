@@ -40,7 +40,7 @@ float4 main(PixelInputType input) : SV_TARGET
 	//If the color is other than black on the texture then this is a pixel in the font so draw it using the font pixel color
 	else
 	{
-		color.a - 1.0f;
+		color.a = 1.0f;
 		color *= pixelColor;
 	}
 
