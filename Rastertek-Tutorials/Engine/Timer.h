@@ -4,13 +4,11 @@
 #ifndef _TIMER_H_
 #define _TIMER_H_
 
-
 //////////////
 // INCLUDES //
 //////////////
 #include <windows.h>
 
-#pragma once
 class Timer
 {
 private:
