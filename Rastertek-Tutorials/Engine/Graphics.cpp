@@ -124,7 +124,7 @@ bool Graphics::Render(float rotation)
 	D3DXMATRIX orthoMatrix;
 
 	//Clear the buffers to begin the scene
-	this->m_Direct3D->BeginScene(D3DXCOLOR(0.0f, 0.0f, 0.0f, 1.0f));
+	this->m_Direct3D->BeginScene(D3DXCOLOR(0.5f, 0.5f, 0.5f, 1.0f));
 
 	//Generate the view matrix based on the camera's position
 	this->m_Camera->Render();
